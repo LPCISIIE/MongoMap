@@ -14,11 +14,15 @@ return [
             ],
         ],
 
+        'mongo' => [
+            'uri' => 'mongodb://localhost:27017',
+            'database' => 'map'
+        ],
+
         'routes' => [
             'dir' => __DIR__ . '/../src/App/Resources/routes',
             'files' => [
-                'app',
-                'auth'
+                'app'
             ]
         ],
 

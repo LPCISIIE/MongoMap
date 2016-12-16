@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Awurth\Slim\Validation\Validator;
-use Cartalyst\Sentinel\Sentinel;
 use Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +16,6 @@ use Slim\Views\Twig;
  * @property Router router
  * @property Messages flash
  * @property Validator validator
- * @property Sentinel auth
  */
 class Controller
 {
