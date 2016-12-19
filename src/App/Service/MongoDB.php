@@ -2,10 +2,12 @@
 
 namespace App\Service;
 
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
+use MongoDB\Driver\WriteResult;
 
 class MongoDB
 {
@@ -69,6 +71,52 @@ class MongoDB
     public function where($collection, array $filter)
     {
         return $this->manager->executeQuery($this->getNamespace($collection), new Query($filter));
+    }
+
+    /**
+     * Insert document in collection
+     *
+     * @param string $collection
+     * @param mixed $data
+     * @return WriteResult
+     */
+    public function insert($collection, $data)
+    {
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert($data);
+
+        return $this->manager->executeBulkWrite($this->getNamespace($collection), $bulkWrite);
+    }
+
+    /**
+     * Update document in collection
+     *
+     * @param string $collection
+     * @param array $filter
+     * @param mixed $data
+     * @return WriteResult
+     */
+    public function update($collection, array $filter, $data)
+    {
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->update($filter, $data);
+
+        return $this->manager->executeBulkWrite($this->getNamespace($collection), $bulkWrite);
+    }
+
+    /**
+     * Delete document from collection
+     *
+     * @param string $collection
+     * @param array $filter
+     * @return WriteResult
+     */
+    public function delete($collection, array $filter)
+    {
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->delete($filter);
+
+        return $this->manager->executeBulkWrite($this->getNamespace($collection), $bulkWrite);
     }
 
     /**
