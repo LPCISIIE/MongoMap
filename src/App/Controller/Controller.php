@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\MongoDB;
 use Awurth\Slim\Validation\Validator;
 use Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
@@ -16,6 +17,7 @@ use Slim\Views\Twig;
  * @property Router router
  * @property Messages flash
  * @property Validator validator
+ * @property MongoDB mongo
  */
 class Controller
 {
@@ -26,9 +28,24 @@ class Controller
      */
     protected $container;
 
+    /**
+     * Constructor
+     *
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+
+    /**
+     * Stop the script and print info about a variable
+     *
+     * @param mixed $data
+     */
+    public function debug($data)
+    {
+        die('<pre>' . print_r($data, true) . '</pre>');
     }
 
     /**
