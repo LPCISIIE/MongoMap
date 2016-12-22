@@ -2,10 +2,12 @@
 
 namespace App\Service;
 
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
+use MongoDB\Driver\WriteResult;
 
 class MongoDB
 {
@@ -20,6 +22,11 @@ class MongoDB
     protected $database;
 
     /**
+     * @var BulkWrite
+     */
+    protected $bulkWrite;
+
+    /**
      * Constructor
      *
      * @param string $uri
@@ -29,6 +36,7 @@ class MongoDB
     {
         $this->manager = new Manager($uri);
         $this->database = $database;
+        $this->bulkWrite = new BulkWrite();
     }
 
     /**
@@ -72,6 +80,54 @@ class MongoDB
     }
 
     /**
+     * Insert document in collection
+     *
+     * @param mixed $data
+     * @return $this
+     */
+    public function insert($data)
+    {
+        $this->bulkWrite->insert($data);
+        return $this;
+    }
+
+    /**
+     * Update document in collection
+     *
+     * @param array $filter
+     * @param mixed $data
+     * @return $this
+     */
+    public function update(array $filter, $data)
+    {
+        $this->bulkWrite->update($filter, $data);
+        return $this;
+    }
+
+    /**
+     * Delete document from collection
+     *
+     * @param array $filter
+     * @return $this
+     */
+    public function delete(array $filter)
+    {
+        $this->bulkWrite->delete($filter);
+        return $this;
+    }
+
+    /**
+     * Execute bulk write
+     *
+     * @param string $collection
+     * @return WriteResult
+     */
+    public function flush($collection)
+    {
+        return $this->manager->executeBulkWrite($this->getNamespace($collection), $this->bulkWrite);
+    }
+
+    /**
      * Execute a MongoDB query
      *
      * @param string $namespace The collection's namespace
@@ -110,10 +166,12 @@ class MongoDB
      * Set manager
      *
      * @param Manager $manager
+     * @return $this
      */
     public function setManager(Manager $manager)
     {
         $this->manager = $manager;
+        return $this;
     }
 
     /**
@@ -146,5 +204,27 @@ class MongoDB
     public function getDatabase()
     {
         return $this->database;
+    }
+
+    /**
+     * Set bulk write
+     *
+     * @param BulkWrite $bulkWrite
+     * @return $this
+     */
+    public function setBulkWrite(BulkWrite $bulkWrite)
+    {
+        $this->bulkWrite = $bulkWrite;
+        return $this;
+    }
+
+    /**
+     * Get bulk write
+     *
+     * @return BulkWrite
+     */
+    public function getBulkWrite()
+    {
+        return $this->bulkWrite;
     }
 }
