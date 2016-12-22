@@ -19,12 +19,13 @@ class PointController extends Controller
             ]);
 
             if ($this->validator->isValid()) {
-                $this->mongo->insert('point', [
+                $this->mongo->insert([
                     'name' => $request->getParam('name'),
                     'address' => $request->getParam('address'),
                     'latitude' => $request->getParam('latitude'),
                     'longitude' => $request->getParam('longitude')
                 ]);
+                $this->mongo->flush('point');
 
                 $this->flash('success', 'Point ' . $request->getParam('name') . ' added');
                 return $this->redirect($response, 'home');

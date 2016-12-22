@@ -22,6 +22,11 @@ class MongoDB
     protected $database;
 
     /**
+     * @var BulkWrite
+     */
+    protected $bulkWrite;
+
+    /**
      * Constructor
      *
      * @param string $uri
@@ -31,6 +36,7 @@ class MongoDB
     {
         $this->manager = new Manager($uri);
         $this->database = $database;
+        $this->bulkWrite = new BulkWrite();
     }
 
     /**
@@ -76,47 +82,49 @@ class MongoDB
     /**
      * Insert document in collection
      *
-     * @param string $collection
      * @param mixed $data
-     * @return WriteResult
+     * @return $this
      */
-    public function insert($collection, $data)
+    public function insert($data)
     {
-        $bulkWrite = new BulkWrite();
-        $bulkWrite->insert($data);
-
-        return $this->manager->executeBulkWrite($this->getNamespace($collection), $bulkWrite);
+        $this->bulkWrite->insert($data);
+        return $this;
     }
 
     /**
      * Update document in collection
      *
-     * @param string $collection
      * @param array $filter
      * @param mixed $data
-     * @return WriteResult
+     * @return $this
      */
-    public function update($collection, array $filter, $data)
+    public function update(array $filter, $data)
     {
-        $bulkWrite = new BulkWrite();
-        $bulkWrite->update($filter, $data);
-
-        return $this->manager->executeBulkWrite($this->getNamespace($collection), $bulkWrite);
+        $this->bulkWrite->update($filter, $data);
+        return $this;
     }
 
     /**
      * Delete document from collection
      *
-     * @param string $collection
      * @param array $filter
+     * @return $this
+     */
+    public function delete(array $filter)
+    {
+        $this->bulkWrite->delete($filter);
+        return $this;
+    }
+
+    /**
+     * Execute bulk write
+     *
+     * @param string $collection
      * @return WriteResult
      */
-    public function delete($collection, array $filter)
+    public function flush($collection)
     {
-        $bulkWrite = new BulkWrite();
-        $bulkWrite->delete($filter);
-
-        return $this->manager->executeBulkWrite($this->getNamespace($collection), $bulkWrite);
+        return $this->manager->executeBulkWrite($this->getNamespace($collection), $this->bulkWrite);
     }
 
     /**
@@ -158,10 +166,12 @@ class MongoDB
      * Set manager
      *
      * @param Manager $manager
+     * @return $this
      */
     public function setManager(Manager $manager)
     {
         $this->manager = $manager;
+        return $this;
     }
 
     /**
@@ -194,5 +204,27 @@ class MongoDB
     public function getDatabase()
     {
         return $this->database;
+    }
+
+    /**
+     * Set bulk write
+     *
+     * @param BulkWrite $bulkWrite
+     * @return $this
+     */
+    public function setBulkWrite(BulkWrite $bulkWrite)
+    {
+        $this->bulkWrite = $bulkWrite;
+        return $this;
+    }
+
+    /**
+     * Get bulk write
+     *
+     * @return BulkWrite
+     */
+    public function getBulkWrite()
+    {
+        return $this->bulkWrite;
     }
 }
