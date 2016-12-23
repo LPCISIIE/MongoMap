@@ -2,6 +2,10 @@
 
 $container = $app->getContainer();
 
+$container['foundHandler'] = function() {
+    return new \Slim\Handlers\Strategies\RequestResponseArgs();
+};
+
 $container['mongo'] = function ($container) {
     return new \App\Service\MongoDB(
         $container['settings']['mongo']['uri'],
