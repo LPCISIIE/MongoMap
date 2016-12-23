@@ -18,7 +18,7 @@ class CountryController extends Controller
     public function add(Request $request, Response $response)
     {
         if ($request->isPost()) {
-            $this->validator->validate($request, ['name' => V::notBlank()->alnum()]);
+            $this->validator->validate($request, ['name' => V::notBlank()->alpha()]);
 
             if ($this->validator->isValid()) {
                 $this->mongo->insert(['name' => $request->getParam('name')]);
@@ -40,7 +40,7 @@ class CountryController extends Controller
             throw $this->notFoundException($request, $response);
 
         if ($request->isPost()) {
-            $this->validator->validate($request, ['name' => V::notBlank()->alnum()]);
+            $this->validator->validate($request, ['name' => V::notBlank()->alpha()]);
 
             if ($this->validator->isValid()) {
                 $this->mongo->update(['_id' => $this->mongo->getObjectId($id)], ['name' => $request->getParam('name')]);
