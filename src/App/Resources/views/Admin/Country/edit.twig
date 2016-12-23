@@ -1,0 +1,16 @@
+{% extends 'layout.twig' %}
+
+{% import 'Macro/form.twig' as form %}
+
+{% block body %}
+
+<div class="container">
+    {% include 'Admin/tabs.twig' with {'tab': 'countries'} %}
+
+    <div class="page-header">
+        <h3>Edit country</h3>
+    </div>
+    {% include 'Admin/Country/form.twig' with {'name': country.name} %}
+</div>
+
+{% endblock %}

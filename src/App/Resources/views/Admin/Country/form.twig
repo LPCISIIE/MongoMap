@@ -1,0 +1,10 @@
+
+<form action="" method="POST">
+    <div class="row">
+        <div class="col-md-4">
+            {{ form.group('name', name, 'name', 'Name') }}
+        </div>
+    </div>
+    {{ csrf() }}
+    <input type="submit" class="btn btn-primary" value="Create">
+</form>

@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs nav-justified admin-tabs">
+    <li role="presentation"{% if tab == 'home' %} class="active"{% endif %}><a href="{{ path_for('admin') }}">Home</a></li>
+    <li role="presentation"{% if tab == 'countries' %} class="active"{% endif %}><a href="{{ path_for('get_countries') }}">Countries</a></li>
+    <li role="presentation"><a href="#">Cities</a></li>
+    <li role="presentation"><a href="#">Categories</a></li>
+</ul>
