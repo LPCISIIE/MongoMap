@@ -72,12 +72,15 @@ class MongoDB
      * Get the entity with this id
      *
      * @param string $collection
-     * @param string $id
+     * @param string|ObjectID $id
      * @return \stdClass|null
      */
     public function findById($collection, $id)
     {
-        $result = $this->where($collection, ['_id' => $this->getObjectId($id)])->toArray();
+        if (is_string($id))
+            $id = $this->getObjectId($id);
+
+        $result = $this->where($collection, ['_id' => $id])->toArray();
 
         if (!empty($result))
             return $result[0];
