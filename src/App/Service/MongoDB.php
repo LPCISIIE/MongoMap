@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
@@ -60,6 +61,23 @@ class MongoDB
     public function find($collection, array $filter)
     {
         $result = $this->where($collection, $filter)->toArray();
+
+        if (!empty($result))
+            return $result[0];
+
+        return null;
+    }
+
+    /**
+     * Get the entity with this id
+     *
+     * @param string $collection
+     * @param string $id
+     * @return \stdClass|null
+     */
+    public function findById($collection, $id)
+    {
+        $result = $this->where($collection, ['_id' => $this->getObjectId($id)])->toArray();
 
         if (!empty($result))
             return $result[0];
@@ -149,6 +167,17 @@ class MongoDB
     public function command($command)
     {
         return $this->manager->executeCommand($this->database, new Command($command));
+    }
+
+    /**
+     * Get ObjectId from $id
+     *
+     * @param string $id
+     * @return ObjectID
+     */
+    public function getObjectId($id)
+    {
+        return new ObjectID($id);
     }
 
     /**
