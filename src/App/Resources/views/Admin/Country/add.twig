@@ -1,0 +1,14 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+<div class="container">
+    {% include 'Admin/tabs.twig' with {'tab': 'countries'} %}
+
+    <div class="page-header">
+        <h3>Add country</h3>
+    </div>
+    {% include 'Admin/Country/form.twig' %}
+</div>
+
+{% endblock %}
