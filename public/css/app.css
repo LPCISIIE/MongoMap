@@ -2,3 +2,5 @@
 .admin-tabs {
     margin-bottom: 50px;
 }
+
+#map { height: 100%; }
