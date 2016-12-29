@@ -3,17 +3,39 @@
 {% block body %}
 
 <div class="container">
+
     <div class="jumbotron">
         <h1>Mongo Map</h1>
     </div>
 
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d42141.25398685848!2d6.173719700000007!3d48.689645899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1482447488078"
-            width='100%' height="450" frameborder="0" style="border:0" allowfullscreen>
-    </iframe>
+    <div id="map"></div>
 
     <a href="{{ path_for('add_point') }}" target="_blank">
         <button class="btn btn-success pull-right"> Add a location </button>
     </a>
+
+    <script>
+        var map;
+        function initialize() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 55, lng: 0},
+                zoom: 2
+            });
+
+
+            {% for point in points %}
+                new google.maps.Marker({
+                    title: '{{ point.name }}',
+                    position: {lat: {{ point.latitude }}, lng: {{ point.longitude }} },
+                    map: map
+                });
+            {% endfor %}
+        }
+    </script>
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkIJ7rDp2F0J39TH8DRIvqtYHrJx-Zsi8&callback=initialize">
+    </script>
 
 </div>
 
