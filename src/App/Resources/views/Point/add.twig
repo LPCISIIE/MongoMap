@@ -11,21 +11,51 @@
     <form action="" method="POST">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
+
                 {{ form.group('name', null, 'name', 'Name') }}
-                {{ form.group('address', null, 'address', 'Address') }}
-                <div class="row">
-                    <div class="col-md-6">
-                        {{ form.group('latitude', null, 'latitude', 'Latitude') }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ form.group('longitude', null, 'longitude', 'Longitude') }}
-                    </div>
+                <div id="locationField">
+                    {{ form.group('address', null, 'autocomplete', 'Address') }}
                 </div>
+
+
+                {{ form.group('latitude', null, 'latitude', null, 'hidden') }}
+                {{ form.group('longitude', null, 'longitude', null, 'hidden') }}
+
                 {{ csrf() }}
-                <input type="submit" class="btn btn-primary" value="Create">
+                <input type="submit" class="btn btn-success pull-right" value="Create">
             </div>
         </div>
     </form>
 </div>
+
+<script>
+    var placeSearch, autocomplete;
+    var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+    };
+
+    function initAutocomplete() {
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+            {types: ['geocode']});
+        autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+
+    function fillInAddress() {
+        var place = autocomplete.getPlace();
+        document.getElementById('latitude').value = place.geometry.location.lat();
+        document.getElementById('longitude').value = place.geometry.location.lng();
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkIJ7rDp2F0J39TH8DRIvqtYHrJx-Zsi8&signed_in=true&libraries=places&callback=initAutocomplete"
+        async defer>
+</script>
 
 {% endblock %}
