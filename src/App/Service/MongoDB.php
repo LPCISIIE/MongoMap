@@ -27,6 +27,8 @@ class MongoDB
      */
     protected $bulkWrite;
 
+    protected $uri;
+
     /**
      * Constructor
      *
@@ -35,7 +37,8 @@ class MongoDB
      */
     public function __construct($uri, $database)
     {
-        $this->manager = new Manager($uri);
+        $this->uri = $uri;
+        $this->manager = new Manager($this->uri);
         $this->database = $database;
         $this->bulkWrite = new BulkWrite();
     }
@@ -145,7 +148,10 @@ class MongoDB
      */
     public function flush($collection)
     {
-        return $this->manager->executeBulkWrite($this->getNamespace($collection), $this->bulkWrite);
+       $res = $this->manager->executeBulkWrite($this->getNamespace($collection), $this->bulkWrite);
+       $this->manager = new Manager($this->uri);
+       $this->bulkWrite = new BulkWrite();
+       return $res;
     }
 
     /**
