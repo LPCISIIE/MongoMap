@@ -27,6 +27,21 @@ class PointController extends Controller
                 ]);
                 $this->mongo->flush('point');
 
+                $this->mongo->insert([
+                    'name' => $request->getParam('country'),
+                ]);
+
+                $this->mongo->flush('country');
+
+                $country= $this->mongo->where('country', ['name' => $request->getParam('country')])->toArray();
+
+               $this->mongo->insert([
+                    'country_id' => $country[0]->_id,
+                    'name' => $request->getParam('city'),
+                ]);
+
+                $this->mongo->flush('city');
+
                 $this->flash('success', 'Point ' . $request->getParam('name') . ' added');
                 return $this->redirect($response, 'home');
             }

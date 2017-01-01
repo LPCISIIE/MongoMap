@@ -9,6 +9,8 @@ class AppController extends Controller
 {
     public function home(Request $request, Response $response)
     {
-        return $this->view->render($response, 'App/home.twig');
+        return $this->view->render($response, 'App/home.twig', [
+            'points' => $this->mongo->findAll('point'),
+        ]);
     }
 }
