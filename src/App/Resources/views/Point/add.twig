@@ -21,6 +21,9 @@
                 {{ form.group('latitude', null, 'latitude', null, 'hidden') }}
                 {{ form.group('longitude', null, 'longitude', null, 'hidden') }}
 
+                {{ form.group('city', null, 'city', null, 'hidden') }}
+                {{ form.group('country', null, 'country', null, 'hidden') }}
+
                 {{ csrf() }}
                 <input type="submit" class="btn btn-success pull-right" value="Create">
             </div>
@@ -30,18 +33,10 @@
 
 <script>
     var placeSearch, autocomplete;
-    var componentForm = {
-        street_number: 'short_name',
-        route: 'long_name',
-        locality: 'long_name',
-        administrative_area_level_1: 'short_name',
-        country: 'long_name',
-        postal_code: 'short_name'
-    };
 
     function initAutocomplete() {
         autocomplete = new google.maps.places.Autocomplete(
-            /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+            (document.getElementById('autocomplete')),
             {types: ['geocode']});
         autocomplete.addListener('place_changed', fillInAddress);
     }
@@ -51,6 +46,17 @@
         var place = autocomplete.getPlace();
         document.getElementById('latitude').value = place.geometry.location.lat();
         document.getElementById('longitude').value = place.geometry.location.lng();
+
+        for(var i = 0; i < place.address_components.length; i += 1) {
+            var addressObj = place.address_components[i];
+            for(var j = 0; j < addressObj.types.length; j += 1) {
+                if (addressObj.types[j] === 'country') {
+                    document.getElementById('country').value = addressObj.long_name;
+                } else if (addressObj.types[j] === 'locality') {
+                    document.getElementById('city').value = addressObj.long_name;
+                }
+            }
+        }
     }
 </script>
 
