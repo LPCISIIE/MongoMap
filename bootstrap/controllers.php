@@ -16,6 +16,10 @@ $container['CityController'] = function ($container) {
     return new App\Controller\CityController($container);
 };
 
+$container['CategoryController'] = function ($container) {
+    return new App\Controller\CategoryController($container);
+};
+
 $container['PointController'] = function ($container) {
     return new App\Controller\PointController($container);
 };

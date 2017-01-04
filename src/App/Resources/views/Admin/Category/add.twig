@@ -1,0 +1,14 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+<div class="container">
+    {% include 'Admin/tabs.twig' with {'tab': 'categories'} %}
+
+    <div class="page-header">
+        <h3>Add category</h3>
+    </div>
+    {% include 'Admin/Category/form.twig' %}
+</div>
+
+{% endblock %}

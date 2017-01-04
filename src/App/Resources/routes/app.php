@@ -20,4 +20,11 @@ $app->group('/admin', function () {
         $this->map(['GET', 'POST'], '/{id}/edit', 'CityController:edit')->setName('edit_city');
         $this->get('/{id}/delete', 'CityController:delete')->setName('delete_city');
     });
+
+    $this->group('/categories', function () {
+        $this->get('', 'CategoryController:get')->setName('get_categories');
+        $this->map(['GET', 'POST'], '/add', 'CategoryController:add')->setName('add_category');
+        $this->map(['GET', 'POST'], '/{id}/edit', 'CategoryController:edit')->setName('edit_category');
+        $this->get('/{id}/delete', 'CategoryController:delete')->setName('delete_category');
+    });
 });
