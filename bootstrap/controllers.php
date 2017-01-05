@@ -27,3 +27,7 @@ $container['PointController'] = function ($container) {
 $container['CommentController'] = function ($container) {
     return new App\Controller\CommentController($container);
 };
+
+$container['EventController'] = function ($container) {
+    return new App\Controller\EventController($container);
+};

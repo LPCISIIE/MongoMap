@@ -1,0 +1,53 @@
+{% extends 'layout.twig' %}
+
+{% import 'Macro/form.twig' as form %}
+
+{% block body %}
+
+<div class="container">
+    <div class="page-header">
+        <h2>Add event</h2>
+    </div>
+    <form action="" method="POST">
+        <div class="row">
+            <div class="col-md-4">
+                {{ form.group('name', null, 'name', 'Name') }}
+            </div>
+        </div>
+
+        <div class="form-group{% if has_error('description') %} has-error{% endif %}">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" rows="8" class="form-control"></textarea>
+            <span class="help-block">{{ error('description') }}</span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                {{ form.group('start_date', null, 'start_date', 'Start date') }}
+            </div>
+            <div class="col-md-4">
+                {{ form.group('end_date', null, 'end_date', 'End date') }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                {{ form.group('start_time', null, 'start_time', 'Start time') }}
+            </div>
+            <div class="col-md-4">
+                {{ form.group('end_time', null, 'end_time', 'End time') }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Parent event') }}
+            </div>
+        </div>
+
+        {{ csrf() }}
+        <input type="submit" class="btn btn-primary" value="Create">
+    </form>
+</div>
+
+{% endblock %}

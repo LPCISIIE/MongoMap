@@ -8,6 +8,13 @@ $app->post('/comments/add','CommentController:add')->setName('add_comment');
 
 $app->get('/api/comments/{id}','CommentController:API_get')->setName('api_comment.get');
 
+$app->group('/events', function () {
+    $this->get('', 'EventController:get')->setName('get_events');
+    $this->map(['GET', 'POST'], '/add', 'EventController:add')->setName('add_event');
+    $this->map(['GET', 'POST'], '/{id}/edit', 'EventController:edit')->setName('edit_event');
+    $this->get('/{id}/delete', 'EventController:delete')->setName('delete_event');
+});
+
 $app->group('/admin', function () {
     $this->get('', 'AdminController:home')->setName('admin');
 
