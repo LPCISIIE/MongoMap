@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\MongoDB;
 use Awurth\Slim\Validation\Validator;
+use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,6 +47,23 @@ class Controller
     public function debug($data)
     {
         die('<pre>' . print_r($data, true) . '</pre>');
+    }
+
+    /**
+     * Get request params
+     *
+     * @param Request $request
+     * @param string[] $params
+     * @return array
+     */
+    public function params(Request $request, array $params)
+    {
+        $data = [];
+        foreach ($params as $param) {
+            $data[$param] = $request->getParam($param);
+        }
+
+        return $data;
     }
 
     /**
