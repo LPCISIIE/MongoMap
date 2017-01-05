@@ -23,3 +23,7 @@ $container['CategoryController'] = function ($container) {
 $container['PointController'] = function ($container) {
     return new App\Controller\PointController($container);
 };
+
+$container['CommentController'] = function ($container) {
+    return new App\Controller\CommentController($container);
+};
