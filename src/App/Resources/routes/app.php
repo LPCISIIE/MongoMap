@@ -4,6 +4,10 @@ $app->get('/', 'AppController:home')->setName('home');
 
 $app->map(['GET', 'POST'], '/points/add', 'PointController:add')->setName('add_point');
 
+$app->post('/comments/add','CommentController:add')->setName('add_comment');
+
+$app->get('/api/comments/{id}','CommentController:API_get')->setName('api_comment.get');
+
 $app->group('/admin', function () {
     $this->get('', 'AdminController:home')->setName('admin');
 

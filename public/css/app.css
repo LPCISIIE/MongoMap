@@ -9,3 +9,16 @@
     margin: 0px;
     padding: 0px
 }
+
+.comment-box {
+    border: 1px black solid;
+    margin-bottom: 1.5em;
+}
+
+.comment-author {
+    font-weight: bold;
+}
+
+.comment-text{
+    font-style : italic;
+}

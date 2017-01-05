@@ -1,4 +1,5 @@
 {% extends 'layout.twig' %}
+{% import 'Macro/form.twig' as form %}
 
 {% block body %}
 
@@ -14,30 +15,98 @@
         <button class="btn btn-success pull-right"> Add a location </button>
     </a>
 
-    <script>
-        var map;
-        function initialize() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 55, lng: 0},
-                zoom: 2
-            });
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id='modalTitle' class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div id='commentsArea' style='padding-bottom:3em;'></div>
+                    <hr>
+                    <h5>Leave your comment : </h5>
+                    <div style='padding-top:3em;' class="row">
+                        <form action='{{ path_for('add_comment') }}' method='POST' >
+                            <div class="col-lg-6">
+                             {{ form.group('author', null, 'author', 'Author') }}
+                            </div>
+                            <div class="col-lg-6">
+                             {{ form.group('comment', null, 'comment', 'Comment') }}
+                            </div>
+                             {{ form.group('location', null, 'location', null, null, 'hidden') }}
+                             {{ csrf() }}
+                            <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Add</button>
+                        </form>
+                        <br>
+                    </div>
+               </div>
+                <div class="modal-footer">
 
-            {% for point in points %}
-                new google.maps.Marker({
-                    title: '{{ point.name }}',
-                    position: {lat: {{ point.latitude }}, lng: {{ point.longitude }} },
-                    map: map
-                });
-            {% endfor %}
-        }
-    </script>
+                </div>
+            </div>
 
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkIJ7rDp2F0J39TH8DRIvqtYHrJx-Zsi8&callback=initialize">
-    </script>
-
+        </div>
+    </div>
 </div>
+
+<script>
+
+    function loadComments(comment_id) {
+        $.getJSON('./api/comments/' + comment_id).done(function (data) {
+            if (!$.trim(data)){
+                $('#commentsArea').append($('<h4>').text('It is empty, be the first person to comment!'));
+            }else{
+                $.each(data, function (index, datum) {
+                    var author = $('<div>').addClass('comment-author').text(datum.author + ' said : ');
+                    var text = $('<div>').addClass('comment-text').text(datum.comment);
+                    var box = $('<div>').addClass('comment-box').append(author).append(text);
+                    var container = $('<div>').append(box);
+                    $('#commentsArea').append(container);
+                });
+            }
+
+
+
+
+        }).fail(function () {
+            console.log('AJAX Error ! Cannot reach the server ');
+        });
+    }
+
+    var map;
+    function initialize() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 55, lng: 0},
+            zoom: 2
+        });
+
+        {% for point in points %}
+        new google.maps.Marker({
+            title: '{{ point.name }}',
+            position: {lat: {{ point.latitude }}, lng: {{ point.longitude }} },
+            map: map
+        }).addListener('click', function() {
+            $('#modalTitle').text('Comments about {{ point.name }}');
+            $('#myModal').modal('show');
+            $('#location').val('{{ point._id }}');
+            $('#commentsArea').empty();
+            loadComments('{{ point._id }}');
+        });
+        {% endfor %}
+    }
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkIJ7rDp2F0J39TH8DRIvqtYHrJx-Zsi8&callback=initialize">
+</script>
+
+
+
+
 
 
 {% endblock %}
