@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use MongoDB\BSON\ObjectID;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
@@ -27,8 +28,6 @@ class MongoDB
      */
     protected $bulkWrite;
 
-    protected $uri;
-
     /**
      * Constructor
      *
@@ -37,8 +36,7 @@ class MongoDB
      */
     public function __construct($uri, $database)
     {
-        $this->uri = $uri;
-        $this->manager = new Manager($this->uri);
+        $this->manager = new Manager($uri);
         $this->database = $database;
         $this->bulkWrite = new BulkWrite();
     }
@@ -148,10 +146,9 @@ class MongoDB
      */
     public function flush($collection)
     {
-       $res = $this->manager->executeBulkWrite($this->getNamespace($collection), $this->bulkWrite);
-       $this->manager = new Manager($this->uri);
+       $result = $this->manager->executeBulkWrite($this->getNamespace($collection), $this->bulkWrite);
        $this->bulkWrite = new BulkWrite();
-       return $res;
+       return $result;
     }
 
     /**
@@ -187,6 +184,30 @@ class MongoDB
     public function getObjectId($id)
     {
         return new ObjectID($id);
+    }
+
+    /**
+     * Get UTCDateTime from DateTime
+     *
+     * @param \DateTime $dateTime
+     * @return UTCDateTime
+     */
+    public function getUTCDateTime(\DateTime $dateTime)
+    {
+        return new UTCDateTime($dateTime->getTimestamp());
+    }
+
+    /**
+     * Get DateTime from UTCDateTime (MongoDb Driver bug fix)
+     *
+     * @param UTCDateTime $utcDateTime
+     * @return \DateTime
+     */
+    public function getDateTime(UTCDateTime $utcDateTime) {
+        $dateTime = new \DateTime();
+        $dateTime->setTimestamp($utcDateTime->__toString());
+
+        return $dateTime;
     }
 
     /**
