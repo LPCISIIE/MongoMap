@@ -9,9 +9,17 @@ use Respect\Validation\Validator as V;
 class CommentController extends Controller
 {
 
+    private function setCORS(Response $response){
+        $response =  $response->withHeader(
+            'Access-Control-Allow-Headers',
+            'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        );
+        return $response->withHeader('Access-Control-Allow-Methods', 'DELETE,GET,POST,PUT');
+    }
 
     public function API_get(Request $request, Response $response, $id)
     {
+        $response = $this->setCORS($response);
         return json_encode($this->mongo->where('comment', ['location_id' => $id])->toArray());
     }
 
