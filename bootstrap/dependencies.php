@@ -36,6 +36,7 @@ $container['view'] = function ($container) {
     $view->addExtension(new \Awurth\Slim\Validation\ValidatorExtension($container['validator']));
 
     $view->getEnvironment()->addGlobal('flash', $container['flash']);
+    $view->getEnvironment()->addGlobal('mongo', $container['mongo']);
 
     return $view;
 };
