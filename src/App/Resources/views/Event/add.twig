@@ -36,8 +36,10 @@
 
         <div class="two fields">
             {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
-            {{ form.select('locations', loc, '_id', 'name', null, 'Select a location', null, 'location_id', "Location of event", 'required') }}
+            {{ form.select('location', locations, '_id', 'name', null, 'Select a location', null, 'location_id', "Location of event", 'required') }}
         </div>
+
+        <input type="hidden" name='point_id' id='point_id'>
 
         {{ csrf() }}
         <input type="submit" class="ui teal button" value="Create">
@@ -46,15 +48,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            {% for location in locations_api %}
-            $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?latlng='
-                + {{ location.latitude }} +',' + {{ location.longitude }} +'&sensor=true').done(function (data) {
-                $.each(data, function (index, datum) {
-                    $('#commentsArea').text(datum.formatted_address);
+            {% for location in locations %}
+                $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?latlng='
+                    + {{ location.latitude }} +',' + {{ location.longitude }} +'&sensor=true').done(function (data) {
+                    $.each(data, function (index, datum) {
+                        $('#location_id option[value="{{ location._id }}"]').text(datum[0].formatted_address);
+                    });
+                }).fail(function () {
+                    console.warn('AJAX Error ! Cannot reach the server ');
                 });
-            }).fail(function () {
-                console.warn('AJAX Error ! Cannot reach the server ');
-            });
             {% endfor %}
         });
     </script>
