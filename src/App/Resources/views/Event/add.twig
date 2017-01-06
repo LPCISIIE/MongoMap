@@ -7,12 +7,13 @@
 <div class="ui container">
     <h1 class="ui center aligned icon header">
         <i class="circular calendar teal icon"></i>
-        Add event
+        Create an event
     </h1>
     <form action="" method="POST" class="ui form error">
         <div class="two fields">
             {{ form.group('name', null, 'name', 'Name') }}
         </div>
+
 
         <div class="field{% if has_error('description') %} error{% endif %}">
             <label for="description">Description</label>
@@ -35,6 +36,7 @@
 
         <div class="two fields">
             {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
+            {{ form.select('locations', locations, '_id', 'name', null, 'Select a location', null, null, "Location of event") }}
         </div>
 
         {{ csrf() }}
