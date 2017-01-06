@@ -36,7 +36,7 @@
 
         <div class="two fields">
             {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
-            {{ form.select('locations', locations, '_id', 'name', null, 'Select a location', null, null, "Location of event", 'required') }}
+            {{ form.select('locations', loc, '_id', 'name', null, 'Select a location', null, 'location_id', "Location of event", 'required') }}
         </div>
 
         {{ csrf() }}
@@ -44,4 +44,18 @@
     </form>
 </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for location in locations_api %}
+            $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?latlng='
+                + {{ location.latitude }} +',' + {{ location.longitude }} +'&sensor=true').done(function (data) {
+                $.each(data, function (index, datum) {
+                    $('#commentsArea').text(datum.formatted_address);
+                });
+            }).fail(function () {
+                console.warn('AJAX Error ! Cannot reach the server ');
+            });
+            {% endfor %}
+        });
+    </script>
 {% endblock %}
