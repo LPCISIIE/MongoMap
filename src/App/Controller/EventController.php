@@ -38,7 +38,7 @@ class EventController extends Controller
                 'start_time' => V::date('H:i'),
                 'end_time' => V::date('H:i'),
                 'start_date' => V::date('d/m/Y'),
-                'end_date' => V::date('d/m/Y')
+                'end_date' => V::date('d/m/Y'),
             ]);
 
             $this->validator->validate($request, [
@@ -47,7 +47,11 @@ class EventController extends Controller
                 'alnum' => 'Invalid event'
             ]);
 
+
             $parentId = $request->getParam('parent_id');
+            $address = $request->getParam('location');
+
+            $point_id = $address ? $address : null;
             $event = $parentId ? $this->mongo->findById('event', $parentId) : null;
 
             if ($parentId && null === $event)
@@ -57,14 +61,32 @@ class EventController extends Controller
                 $start = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('start_date') . ' ' . $request->getParam('start_time'));
                 $end = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('end_date') . ' ' . $request->getParam('end_time'));
 
+
+
                 $this->mongo->insert([
                     'name' => $request->getParam('name'),
                     'description' => $request->getParam('description'),
                     'begins_at' => $this->mongo->getUTCDateTime($start),
                     'ends_at' => $this->mongo->getUTCDateTime($end),
-                    'parent_id' => $parentId
+                    'parent_id' => $parentId,
+                    'location' => $point_id,
                 ]);
                 $this->mongo->flush('event');
+
+                $point = $this->mongo->findById('point',$point_id);
+
+                $this->mongo->update(
+                    [
+                        '_id' => $this->mongo->getObjectId($point_id)],
+                    [
+                        'name' => $point->name,
+                        'latitude' => $point->latitude,
+                        'longitude' => $point->longitude,
+                        'isEvent' => true,
+                    ]
+                );
+                $this->mongo->flush('point');
+
 
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" added');
                 return $this->redirect($response, 'get_events');
@@ -72,7 +94,12 @@ class EventController extends Controller
         }
 
         return $this->view->render($response, 'Event/add.twig', [
-            'events' => $this->mongo->findAll('event')
+            'events' => $this->mongo->findAll('event'),
+            'locations' => $this->mongo->findAll('point')->toArray()
+            /**
+             *  Else we get an error on Twig, thanks MongoDB
+             *  An exception has been thrown during the rendering of a template ("Cursors cannot yield multiple iterators").
+             */
         ]);
     }
 
