@@ -25,16 +25,16 @@
         </div>
 
         <div class="two fields">
-            {{ form.group('start_date', null, 'start_date', 'Start date') }}
-            {{ form.group('end_date', null, 'end_date', 'End date') }}
+            {{ form.group('start_date', null, 'start_date', 'Start date', null, null, 'dd/mm/YYYY') }}
+            {{ form.group('end_date', null, 'end_date', 'End date', null, null, 'dd/mm/YYYY') }}
         </div>
         <div class="two fields">
-            {{ form.group('start_time', null, 'start_time', 'Start time') }}
-            {{ form.group('end_time', null, 'end_time', 'End time') }}
+            {{ form.group('start_time', null, 'start_time', 'Start time', null, null, 'HH:mm') }}
+            {{ form.group('end_time', null, 'end_time', 'End time', null, null, 'HH:mm') }}
         </div>
 
         <div class="two fields">
-            {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Parent event') }}
+            {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
         </div>
 
         {{ csrf() }}
