@@ -1,4 +1,8 @@
 
+body {
+    padding-top: 70px;
+}
+
 .admin-tabs {
     margin-bottom: 50px;
 }

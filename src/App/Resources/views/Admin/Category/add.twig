@@ -2,12 +2,14 @@
 
 {% block body %}
 
-<div class="container">
+<div class="ui container">
     {% include 'Admin/tabs.twig' with {'tab': 'categories'} %}
 
-    <div class="page-header">
-        <h3>Add category</h3>
-    </div>
+    <h3 class="ui horizontal divider header">
+        <i class="teal sitemap icon"></i>
+        Add category
+    </h3>
+
     {% include 'Admin/Category/form.twig' %}
 </div>
 

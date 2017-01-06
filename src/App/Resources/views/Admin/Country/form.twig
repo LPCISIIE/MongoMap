@@ -1,12 +1,10 @@
 
 {% import 'Macro/form.twig' as form %}
 
-<form action="" method="POST">
-    <div class="row">
-        <div class="col-md-4">
-            {{ form.group('name', name, 'name', 'Name') }}
-        </div>
+<form action="" method="POST" class="ui form error">
+    <div class="two fields">
+        {{ form.group('name', name, 'name', 'Name') }}
     </div>
     {{ csrf() }}
-    <input type="submit" class="btn btn-primary" value="{% if name %}Edit{% else %}Create{% endif %}">
+    <input type="submit" class="ui teal button" value="{% if name %}Edit{% else %}Create{% endif %}">
 </form>

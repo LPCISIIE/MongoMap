@@ -1,6 +1,16 @@
-<ul class="nav nav-tabs nav-justified admin-tabs">
-    <li role="presentation"{% if tab == 'home' %} class="active"{% endif %}><a href="{{ path_for('admin') }}">Home</a></li>
-    <li role="presentation"{% if tab == 'countries' %} class="active"{% endif %}><a href="{{ path_for('get_countries') }}">Countries</a></li>
-    <li role="presentation"{% if tab == 'cities' %} class="active"{% endif %}><a href="{{ path_for('get_cities') }}">Cities</a></li>
-    <li role="presentation"{% if tab == 'categories' %} class="active"{% endif %}><a href="{{ path_for('get_categories') }}">Categories</a></li>
-</ul>
+<div class="ui teal secondary pointing menu">
+    <a href="{{ path_for('admin') }}" class="item{% if tab == 'home' %} active{% endif %}">Dashboard</a>
+    <a href="{{ path_for('get_countries') }}" class="item{% if tab == 'countries' %} active{% endif %}">Countries</a>
+    <a href="{{ path_for('get_cities') }}" class="item{% if tab == 'cities' %} active{% endif %}">Cities</a>
+    <a href="{{ path_for('get_categories') }}" class="item{% if tab == 'categories' %} active{% endif %}">Categories</a>
+
+    <div class="right menu">
+        {% if tab == 'countries' %}
+            <a href="{{ path_for('add_country') }}" class="ui item">Add country</a>
+        {% elseif tab == 'cities' %}
+            <a href="{{ path_for('add_city') }}" class="ui item">Add city</a>
+        {% elseif tab == 'categories' %}
+            <a href="{{ path_for('add_category') }}" class="ui item">Add category</a>
+        {% endif %}
+    </div>
+</div>

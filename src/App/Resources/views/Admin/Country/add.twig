@@ -2,12 +2,14 @@
 
 {% block body %}
 
-<div class="container">
+<div class="ui container">
     {% include 'Admin/tabs.twig' with {'tab': 'countries'} %}
 
-    <div class="page-header">
-        <h3>Add country</h3>
-    </div>
+    <h3 class="ui horizontal divider header">
+        <i class="teal map icon"></i>
+        Add country
+    </h3>
+
     {% include 'Admin/Country/form.twig' %}
 </div>
 
