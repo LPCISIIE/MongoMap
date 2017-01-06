@@ -1,8 +1,8 @@
 
-{% macro group(name, value, id, label, class, type) %}
+{% macro group(name, value, id, label, class, type, placeholder) %}
     <div class="field{% if has_error(name) %} error{% endif %}">
         <label for="{{ id }}">{{ label }}</label>
-        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" id="{{ id }}" class="{{ class }}">
+        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" id="{{ id }}" class="{{ class }}" placeholder="{{ placeholder }}">
     </div>
     {% if has_error(name) %}
         <div class="ui error message">
