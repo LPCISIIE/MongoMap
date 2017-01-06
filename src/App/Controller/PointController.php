@@ -33,7 +33,7 @@ class PointController extends Controller
 
                 $this->mongo->flush('country');
 
-                $country= $this->mongo->where('country', ['name' => $request->getParam('country')])->toArray();
+                $country = $this->mongo->where('country', ['name' => $request->getParam('country')])->toArray();
 
                $this->mongo->insert([
                     'country_id' => $country[0]->_id,
