@@ -123,9 +123,16 @@ class EventController extends Controller
             }
         }
 
+        // As long as we don't have a WHERE NOT or something like that...
+        $events = [];
+        foreach ($this->mongo->findAll('event') as $e){
+            if ( ($e->_id != $id) && ($e->parent_id != $id) )
+                array_push($events, $e);
+        }
+
         return $this->view->render($response, 'Event/edit.twig', [
             'event' => $event,
-            'events' => $this->mongo->findAll('event')
+            'events' => $events
         ]);
     }
 
