@@ -36,7 +36,7 @@
 
         <div class="two fields">
             {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
-            {{ form.select('locations', locations, '_id', 'name', null, 'Select a location', null, null, "Location of event") }}
+            {{ form.select('locations', locations, '_id', 'name', null, 'Select a location', null, null, "Location of event", 'required') }}
         </div>
 
         {{ csrf() }}
