@@ -4,36 +4,24 @@
 
 {% block body %}
 
-<div class="container">
+<div class="ui container">
     {% include 'Admin/tabs.twig' with {'tab': 'cities'} %}
 
-    <div class="page-header">
-        <h3>Edit city</h3>
-    </div>
-    <form action="" method="POST">
-        <div class="row">
-            <div class="col-md-4">
-                {{ form.group('name', city.name, 'name', 'Name') }}
-            </div>
+    <h3 class="ui horizontal divider header">
+        <i class="teal map icon"></i>
+        Edit city
+    </h3>
+
+    <form action="" method="POST" class="ui form error">
+        <div class="two fields">
+            {{ form.group('name', city.name, 'name', 'Name') }}
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group{% if has_error('country_id') %} has-error{% endif %}">
-                    <label for="country_id">Country</label>
-                    <select name="country_id" id="country_id" class="form-control">
-                        <option value="">Select a country</option>
-                        {% for country in countries %}
-                            <option value="{{ country._id }}"{% if city.country_id == country._id %} selected{% endif %}>
-                                {{ country.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <span class="help-block">{{ error('country_id') }}</span>
-                </div>
-            </div>
+        <div class="two fields">
+            {{ form.select('country_id', countries, '_id', 'name', null, 'Select a country', city.country_id, 'country_id', 'Country') }}
         </div>
+
         {{ csrf() }}
-        <input type="submit" class="btn btn-primary" value="Create">
+        <input type="submit" class="ui teal button" value="Create">
     </form>
 </div>
 

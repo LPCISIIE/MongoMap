@@ -1,60 +1,38 @@
 {% extends 'layout.twig' %}
+
 {% import 'Macro/form.twig' as form %}
 
 {% block body %}
 
-<div class="container">
-
-    <div class="jumbotron">
-        <h1>Mongo Map</h1>
-    </div>
-
+<div class="ui container">
     <div id="map"></div>
 
-    <a href="{{ path_for('add_point') }}" target="_blank">
-        <button class="btn btn-success pull-right"> Add a location </button>
-    </a>
+    <a href="{{ path_for('add_point') }}" class="ui right floated teal button">Add a location</a>
 
-    <!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 id='modalTitle' class="modal-title"></h4>
+    <div class="ui modal" id="comments-modal">
+        <i class="close icon"></i>
+        <div class="header" id="modalTitle"></div>
+        <div class="content">
+            <div id="commentsArea" style="padding-bottom: 3em;"></div>
+            <div class="ui divider"></div>
+            <form action="{{ path_for('add_comment') }}" method="POST" class="ui form error">
+                <div class="two fields">
+                    {{ form.group('author', null, 'author', 'Author') }}
                 </div>
-                <div class="modal-body">
-                    <div id='commentsArea' style='padding-bottom:3em;'></div>
-                    <hr>
-                    <h5>Leave your comment : </h5>
-                    <div style='padding-top:3em;' class="row">
-                        <form action='{{ path_for('add_comment') }}' method='POST' >
-                            <div class="col-lg-6">
-                             {{ form.group('author', null, 'author', 'Author') }}
-                            </div>
-                            <div class="col-lg-6">
-                             {{ form.group('comment', null, 'comment', 'Comment') }}
-                            </div>
-                             {{ form.group('location', null, 'location', null, null, 'hidden') }}
-                             {{ csrf() }}
-                            <button type="submit" class="btn btn-success pull-right"><i class="fa fa-check"></i> Add</button>
-                        </form>
-                        <br>
-                    </div>
-               </div>
-                <div class="modal-footer">
-
+                <div class="two fields">
+                    {{ form.group('comment', null, 'comment', 'Comment') }}
                 </div>
-            </div>
 
+                {{ form.group('location', null, 'location', null, null, 'hidden') }}
+
+                {{ csrf() }}
+                <button type="submit" class="ui teal labeled icon button"><i class="checkmark icon"></i> Add</button>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
-
     function loadComments(comment_id) {
         $.getJSON('./api/comments/' + comment_id).done(function (data) {
             if (!$.trim(data)){
@@ -68,10 +46,6 @@
                     $('#commentsArea').append(container);
                 });
             }
-
-
-
-
         }).fail(function () {
             console.log('AJAX Error ! Cannot reach the server ');
         });
@@ -91,7 +65,7 @@
             map: map
         }).addListener('click', function() {
             $('#modalTitle').text('Comments about {{ point.name }}');
-            $('#myModal').modal('show');
+            $('#comments-modal').modal('show');
             $('#location').val('{{ point._id }}');
             $('#commentsArea').empty();
             loadComments('{{ point._id }}');
@@ -103,10 +77,5 @@
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkIJ7rDp2F0J39TH8DRIvqtYHrJx-Zsi8&callback=initialize">
 </script>
-
-
-
-
-
 
 {% endblock %}

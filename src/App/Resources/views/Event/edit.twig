@@ -4,49 +4,42 @@
 
 {% block body %}
 
-<div class="container">
-    <div class="page-header">
-        <h2>Edit event</h2>
-    </div>
-    <form action="" method="POST">
-        <div class="row">
-            <div class="col-md-4">
-                {{ form.group('name', event.name, 'name', 'Name') }}
-            </div>
+<div class="ui container">
+    <h1 class="ui center aligned icon header">
+        <i class="circular calendar teal icon"></i>
+        Edit event
+    </h1>
+    <form action="" method="POST" class="ui form error">
+        <div class="two fields">
+            {{ form.group('name', event.name, 'name', 'Name') }}
         </div>
 
-        <div class="form-group{% if has_error('description') %} has-error{% endif %}">
+        <div class="field{% if has_error('description') %} error{% endif %}">
             <label for="description">Description</label>
-            <textarea name="description" id="description" rows="8" class="form-control">{{ event.description }}</textarea>
-            <span class="help-block">{{ error('description') }}</span>
+            <textarea name="description" id="description" rows="8">{{ event.description }}</textarea>
+            {% if has_error('description') %}
+                <div class="ui error message">
+                    <p>{{ error('description') }}</p>
+                </div>
+            {% endif %}
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                {{ form.group('start_date', mongo.dateTime(event.begins_at)|date('d/m/Y'), 'start_date', 'Start date') }}
-            </div>
-            <div class="col-md-4">
-                {{ form.group('end_date', mongo.dateTime(event.ends_at)|date('d/m/Y'), 'end_date', 'End date') }}
-            </div>
+        <div class="two fields">
+            {{ form.group('start_date', mongo.dateTime(event.begins_at)|date('d/m/Y'), 'start_date', 'Start date') }}
+            {{ form.group('end_date', mongo.dateTime(event.ends_at)|date('d/m/Y'), 'end_date', 'End date') }}
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                {{ form.group('start_time', mongo.dateTime(event.begins_at)|date('H:i'), 'start_time', 'Start time') }}
-            </div>
-            <div class="col-md-4">
-                {{ form.group('end_time', mongo.dateTime(event.ends_at)|date('H:i'), 'end_time', 'End time') }}
-            </div>
+        <div class="two fields">
+            {{ form.group('start_time', mongo.dateTime(event.begins_at)|date('H:i'), 'start_time', 'Start time') }}
+            {{ form.group('end_time', mongo.dateTime(event.ends_at)|date('H:i'), 'end_time', 'End time') }}
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', event.parent_id, 'parent_id', 'Parent event') }}
-            </div>
+        <div class="two fields">
+            {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', event.parent_id, 'parent_id', 'Parent event') }}
         </div>
 
         {{ csrf() }}
-        <input type="submit" class="btn btn-primary" value="Edit">
+        <input type="submit" class="ui teal button" value="Edit">
     </form>
 </div>
 

@@ -1,18 +1,22 @@
 
 {% macro group(name, value, id, label, class, type) %}
-    <div class="form-group{% if has_error(name) %} has-error{% endif %}">
+    <div class="field{% if has_error(name) %} error{% endif %}">
         <label for="{{ id }}">{{ label }}</label>
-        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" id="{{ id }}" class="form-control {{ class }}" aria-describedby="{{ id }}-help-block">
-        <span id="{{ id }}-help-block" class="help-block">{{ error(name) }}</span>
+        <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" id="{{ id }}" class="{{ class }}">
     </div>
+    {% if has_error(name) %}
+        <div class="ui error message">
+            <p>{{ error(name) }}</p>
+        </div>
+    {% endif %}
 {% endmacro %}
 
 {% macro select(name, options, value_key, text_key, default_value, default_text, selected_value, id, label) %}
-    <div class="form-group{% if has_error(name) %} has-error{% endif %}">
+    <div class="field{% if has_error(name) %} error{% endif %}">
         {% if label %}
             <label for="{{ id }}">{{ label }}</label>
         {% endif %}
-        <select name="{{ name }}" id="{{ id }}" class="form-control">
+        <select name="{{ name }}" id="{{ id }}">
             {% if default_value or default_text %}
                 <option value="{{ default_value }}">{{ default_text }}</option>
             {% endif %}
@@ -20,6 +24,10 @@
                 <option value="{{ attribute(option, value_key) }}"{% if selected_value == attribute(option, value_key) %} selected{% endif %}>{{ attribute(option, text_key) }}</option>
             {% endfor %}
         </select>
-        <span id="{{ id }}-help-block" class="help-block">{{ error(name) }}</span>
     </div>
+    {% if has_error(name) %}
+        <div class="ui error message">
+            <p>{{ error(name) }}</p>
+        </div>
+    {% endif %}
 {% endmacro %}

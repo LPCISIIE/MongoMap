@@ -40,7 +40,7 @@ class CommentController extends Controller
 
              $this->flash('success', 'Comment added');
          }else{
-             $this->flash('danger', 'Something went wrong');
+             $this->flash('error', 'Something went wrong');
          }
 
          return $this->redirect($response, 'home');

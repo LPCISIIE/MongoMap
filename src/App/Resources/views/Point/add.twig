@@ -4,28 +4,28 @@
 
 {% block body %}
 
-<div class="container">
-    <div class="page-header">
-        <h2>Add point</h2>
-    </div>
-    <form action="" method="POST">
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-
+<div class="ui container">
+    <h1 class="ui center aligned icon header">
+        <i class="circular marker teal icon"></i>
+        Add point
+    </h1>
+    <form action="" method="POST" class="ui form error">
+        <div class="ui grid">
+            <div class="four wide column"></div>
+            <div class="eight wide column">
                 {{ form.group('name', null, 'name', 'Name') }}
                 <div id="locationField">
                     {{ form.group('address', null, 'autocomplete', 'Address') }}
                 </div>
 
+                {{ form.group('latitude', null, 'latitude', null, null, 'hidden') }}
+                {{ form.group('longitude', null, 'longitude', null, null, 'hidden') }}
 
-                {{ form.group('latitude', null, 'latitude', null, 'hidden') }}
-                {{ form.group('longitude', null, 'longitude', null, 'hidden') }}
-
-                {{ form.group('city', null, 'city', null, 'hidden') }}
-                {{ form.group('country', null, 'country', null, 'hidden') }}
+                {{ form.group('city', null, 'city', null, null, 'hidden') }}
+                {{ form.group('country', null, 'country', null, null, 'hidden') }}
 
                 {{ csrf() }}
-                <input type="submit" class="btn btn-success pull-right" value="Create">
+                <input type="submit" class="fluid ui teal button" value="Create">
             </div>
         </div>
     </form>
