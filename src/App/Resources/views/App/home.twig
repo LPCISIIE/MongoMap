@@ -13,8 +13,9 @@
         <i class="close icon"></i>
         <div class="header" id="modalTitle"></div>
         <div class="content">
-            <div id="commentsArea" style="padding-bottom: 3em;"></div>
+            <div id="commentsArea"></div>
             <div class="ui divider"></div>
+            <h5>Your comment : </h5>
             <form action="{{ path_for('add_comment') }}" method="POST" class="ui form error">
                 <div class="two fields">
                     {{ form.group('author', null, 'author', 'Author') }}
