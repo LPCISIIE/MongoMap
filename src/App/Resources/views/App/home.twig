@@ -24,16 +24,17 @@
             <form action="{{ path_for('add_comment') }}" method="POST" class="ui form error">
                 <div class="two fields">
                     {{ form.group('author', null, 'author', 'Author') }}
-                </div>
-                <div class="two fields">
                     {{ form.group('comment', null, 'comment', 'Comment') }}
                 </div>
-
                 {{ form.group('location', null, 'location', null, null, 'hidden') }}
 
                 {{ csrf() }}
-                <button type="submit" class="ui teal labeled icon button"><i class="checkmark icon"></i> Add</button>
+                <div class='pull-right fields'>
+                    <button type="submit" class="ui circular teal labeled icon button"><i class="checkmark icon"></i> Add</button>
+                    <div id="eventLocation"></div>
+                </div>
             </form>
+
         </div>
     </div>
 </div>
@@ -63,7 +64,7 @@
     function initialize() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 47.08, lng: 2.4},
-            zoom: 6
+            zoom: 3
         });
 
         var markerEvent = new google.maps.MarkerImage (
@@ -80,13 +81,16 @@
                 map: map,
                 {{ ( point.isEvent == 'true' ? 'icon : markerEvent,' ) }}
             }).addListener('click', function() {
-                var title = '';
-                {{ ( point.isEvent == 'true' ? "title= 'Special event on this place ! | '")}}
-                $('#modalTitle').text( title + 'Comments about {{ point.name }}');
+                $('#modalTitle').text('Comments about {{ point.name }}');
                 $('#comments-modal').modal('show');
                 $('#location').val('{{ point._id }}');
                 $('#commentsArea').empty();
                 loadComments('{{ point._id }}');
+                $('#eventLocation').empty();
+                {% if (point.isEvent is not empty) %}
+                     var button = "<a href='{{ path_for('get_event' , {'id': point.event_id})  }}'<button class='ui circular yellow labeled icon button'><i class='icon star'></i> Check the special event</button></a>";
+                    $('#eventLocation').append(button);
+                {% endif %}
             });
         {% endfor %}
     }
