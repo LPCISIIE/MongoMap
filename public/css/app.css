@@ -35,3 +35,7 @@ body {
 .comment-text{
     font-style : italic;
 }
+
+.pull-right {
+    float:right !important;
+}
