@@ -54,7 +54,7 @@ class EventController extends Controller
                 'start_time' => V::date('H:i'),
                 'end_time' => V::date('H:i'),
                 'start_date' => V::date('d/m/Y'),
-                'end_date' => V::date('d/m/Y'),
+                'end_date' => V::date('d/m/Y')
             ]);
 
             $this->validator->validate($request, [
@@ -63,21 +63,40 @@ class EventController extends Controller
                 'alnum' => 'Invalid event'
             ]);
 
+            $this->validator->validate($request, [
+                'category_id' => V::notBlank()->alnum()
+            ], [
+                'notBlank' => 'Please select a category',
+                'alnum' => 'Invalid category'
+            ]);
+
+            $this->validator->validate($request, [
+                'point_id' => V::notBlank()->alnum()
+            ], [
+                'notBlank' => 'Please select a location',
+                'alnum' => 'Invalid event'
+            ]);
 
             $parentId = $request->getParam('parent_id');
-            $address = $request->getParam('location');
+            $categoryId = $request->getParam('category_id');
+            $pointId = $request->getParam('point_id');
 
-            $point_id = $address ? $address : null;
-            $event = $parentId ? $this->mongo->findById('event', $parentId) : null;
-
-            if ($parentId && null === $event)
+            // Verify if parent event exists, if specified
+            $parent = $parentId ? $this->mongo->findById('event', $parentId) : null;
+            if ($parentId && null === $parent)
                 $this->validator->addError('parent_id', 'Unknown event');
+
+            // Verify if category exists
+            if (!$categoryId || null === $this->mongo->findById('category', $categoryId))
+                $this->validator->addError('category_id', 'Unknown category');
+
+            // Verify if location exists
+            if (!$pointId || null === $this->mongo->findById('point', $pointId))
+                $this->validator->addError('point_id', 'Unknown location');
 
             if ($this->validator->isValid()) {
                 $start = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('start_date') . ' ' . $request->getParam('start_time'));
                 $end = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('end_date') . ' ' . $request->getParam('end_time'));
-
-
 
                 $this->mongo->insert([
                     'name' => $request->getParam('name'),
@@ -85,24 +104,10 @@ class EventController extends Controller
                     'begins_at' => $this->mongo->getUTCDateTime($start),
                     'ends_at' => $this->mongo->getUTCDateTime($end),
                     'parent_id' => $parentId,
-                    'location' => $point_id,
+                    'category_id' => $categoryId,
+                    'point_id' => $pointId
                 ]);
                 $this->mongo->flush('event');
-
-                $point = $this->mongo->findById('point',$point_id);
-
-                $this->mongo->update(
-                    [
-                        '_id' => $this->mongo->getObjectId($point_id)],
-                    [
-                        'name' => $point->name,
-                        'latitude' => $point->latitude,
-                        'longitude' => $point->longitude,
-                        'isEvent' => true,
-                    ]
-                );
-                $this->mongo->flush('point');
-
 
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" added');
                 return $this->redirect($response, 'get_events');
@@ -110,12 +115,9 @@ class EventController extends Controller
         }
 
         return $this->view->render($response, 'Event/add.twig', [
-            'events' => $this->mongo->findAll('event'),
-            'locations' => $this->mongo->findAll('point')->toArray()
-            /**
-             *  Else we get an error on Twig, thanks MongoDB
-             *  An exception has been thrown during the rendering of a template ("Cursors cannot yield multiple iterators").
-             */
+            'events' => $this->mongo->findAll('event')->toArray(),
+            'categories' => $this->mongo->findAll('category')->toArray(),
+            'points' => $this->mongo->findAll('point')->toArray()
         ]);
     }
 
@@ -142,11 +144,36 @@ class EventController extends Controller
                 'alnum' => 'Invalid event'
             ]);
 
-            $parentId = $request->getParam('parent_id');
-            $event = $parentId ? $this->mongo->findById('event', $parentId) : null;
+            $this->validator->validate($request, [
+                'category_id' => V::notBlank()->alnum()
+            ], [
+                'notBlank' => 'Please select a category',
+                'alnum' => 'Invalid category'
+            ]);
 
-            if ($parentId && null === $event)
+            $this->validator->validate($request, [
+                'point_id' => V::notBlank()->alnum()
+            ], [
+                'notBlank' => 'Please select a location',
+                'alnum' => 'Invalid event'
+            ]);
+
+            $parentId = $request->getParam('parent_id');
+            $categoryId = $request->getParam('category_id');
+            $pointId = $request->getParam('point_id');
+
+            // Verify if parent event exists, if specified
+            $parent = $parentId ? $this->mongo->findById('event', $parentId) : null;
+            if ($parentId && null === $parent)
                 $this->validator->addError('parent_id', 'Unknown event');
+
+            // Verify if category exists
+            if (!$categoryId || null === $this->mongo->findById('category', $categoryId))
+                $this->validator->addError('category_id', 'Unknown category');
+
+            // Verify if location exists
+            if (!$pointId || null === $this->mongo->findById('point', $pointId))
+                $this->validator->addError('point_id', 'Unknown location');
 
             if ($this->validator->isValid()) {
                 $start = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('start_date') . ' ' . $request->getParam('start_time'));
@@ -157,7 +184,9 @@ class EventController extends Controller
                     'description' => $request->getParam('description'),
                     'begins_at' => $this->mongo->getUTCDateTime($start),
                     'ends_at' => $this->mongo->getUTCDateTime($end),
-                    'parent_id' => $parentId
+                    'parent_id' => $parentId,
+                    'category_id' => $categoryId,
+                    'point_id' => $pointId
                 ]);
                 $this->mongo->flush('event');
 
@@ -175,7 +204,9 @@ class EventController extends Controller
 
         return $this->view->render($response, 'Event/edit.twig', [
             'event' => $event,
-            'events' => $events
+            'events' => $events,
+            'categories' => $this->mongo->findAll('category')->toArray(),
+            'points' => $this->mongo->findAll('point')->toArray()
         ]);
     }
 
