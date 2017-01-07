@@ -8,6 +8,22 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class EventController extends Controller
 {
+    public function show(Request $request, Response $response, $id)
+    {
+        $event = $this->mongo->findById('event', $id);
+        $eventWithChildren = [
+            'name' => $event->name,
+            'description' => $event->description,
+            'begins_at' => $event->begins_at,
+            'ends_at' => $event->ends_at,
+            'children' => $this->mongo->where('event', ['parent_id' => $event->_id->__toString()])->toArray()
+        ];
+
+        return $this->view->render($response, 'Event/show.twig', [
+            'event' => $eventWithChildren
+        ]);
+    }
+
     public function get(Request $request, Response $response)
     {
         $events = $this->mongo->findAll('event');

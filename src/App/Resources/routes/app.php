@@ -13,6 +13,7 @@ $app->group('/events', function () {
     $this->map(['GET', 'POST'], '/add', 'EventController:add')->setName('add_event');
     $this->map(['GET', 'POST'], '/{id}/edit', 'EventController:edit')->setName('edit_event');
     $this->get('/{id}/delete', 'EventController:delete')->setName('delete_event');
+    $this->get('/{id}', 'EventController:show')->setName('get_event');
 });
 
 $app->group('/admin', function () {
