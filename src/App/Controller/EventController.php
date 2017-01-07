@@ -91,12 +91,8 @@ class EventController extends Controller
                 $this->validator->addError('category_id', 'Unknown category');
 
             // Verify if location exists
-            if (!$pointId || null === $this->mongo->findById('point', $pointId)) {
+            if (!$pointId || null === $this->mongo->findById('point', $pointId))
                 $this->validator->addError('point_id', 'Unknown location');
-            }else{
-
-            }
-
 
             if ($this->validator->isValid()) {
                 $start = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('start_date') . ' ' . $request->getParam('start_time'));
