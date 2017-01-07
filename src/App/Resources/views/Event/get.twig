@@ -3,12 +3,17 @@
 {% block body %}
 
 <div class="ui container">
-    <h1 class="header">Events <a href="{{ path_for('add_event') }}" class="ui right floated teal button">Add event</a></h1>
+    <h1 class="ui center aligned icon header">
+        <i class="circular marker teal icon"></i>
+        Events
+    </h1>
+    <h2 class="ui center aligned header"><a href="{{ path_for('add_event') }}" class="ui teal button">Add event</a></h2>
+
     <div class="ui cards">
         {% for event in events %}
             <div class="ui teal card">
                 <div class="content">
-                    <div class="header">{{ event.name }}</div>
+                    <a href="{{ path_for('get_event', {'id': event._id}) }}" class="header">{{ event.name }}</a>
                     <div class="description">
                         <p>{{ event.description }}</p>
                     </div>
