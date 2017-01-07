@@ -7,7 +7,11 @@
         <i class="circular marker teal icon"></i>
         Events
     </h1>
-    <h2 class="ui center aligned header"><a href="{{ path_for('add_event') }}" class="ui teal button">Add event</a></h2>
+    <h2 class="ui center aligned header">
+        <a href="{{ path_for('add_event') }}" class="ui circular yellow button">
+            <i class="star icon"></i> Create an event
+        </a>
+    </h2>
 
     <div class="ui cards">
         {% for event in events %}
