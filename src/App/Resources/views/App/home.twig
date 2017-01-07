@@ -7,6 +7,9 @@
 <div class="ui container">
     <div id="map"></div>
     <br>
+    {% if points is not empty %}
+        <a href="{{ path_for('add_event') }}" class="ui yellow right floated button"><i class="star icon"></i>Create an event</a>
+    {% endif %}
     <a href="{{ path_for('add_point') }}" class="ui right floated teal button"><i class="plus icon"></i>Add a location</a>
 
     <div class="ui modal" id="comments-modal">
@@ -53,24 +56,36 @@
     }
 
     var map;
+    var color = "fec52e";
+
+
     function initialize() {
+
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 55, lng: 0},
             zoom: 2
         });
-
+        var markerEvent = new google.maps.MarkerImage (
+            "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + color,
+            new google.maps.Size(25, 35),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(10, 35)
+        );
         {% for point in points %}
-        new google.maps.Marker({
-            title: '{{ point.name }}',
-            position: {lat: {{ point.latitude }}, lng: {{ point.longitude }} },
-            map: map
-        }).addListener('click', function() {
-            $('#modalTitle').text('Comments about {{ point.name }}');
-            $('#comments-modal').modal('show');
-            $('#location').val('{{ point._id }}');
-            $('#commentsArea').empty();
-            loadComments('{{ point._id }}');
-        });
+            new google.maps.Marker({
+                title: '{{ point.name }}',
+                position: {lat: {{ point.latitude }}, lng: {{ point.longitude }} },
+                map: map,
+                {{ ( point.isEvent == 'true' ? 'icon : markerEvent,' ) }}
+            }).addListener('click', function() {
+                var title = '';
+                {{ ( point.isEvent == 'true' ? "title= 'Special event on this place ! | '")}}
+                $('#modalTitle').text( title + 'Comments about {{ point.name }}');
+                $('#comments-modal').modal('show');
+                $('#location').val('{{ point._id }}');
+                $('#commentsArea').empty();
+                loadComments('{{ point._id }}');
+            });
         {% endfor %}
     }
 </script>

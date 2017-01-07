@@ -7,12 +7,13 @@
 <div class="ui container">
     <h1 class="ui center aligned icon header">
         <i class="circular calendar teal icon"></i>
-        Add event
+        Create an event
     </h1>
     <form action="" method="POST" class="ui form error">
         <div class="two fields">
             {{ form.group('name', null, 'name', 'Name') }}
         </div>
+
 
         <div class="field{% if has_error('description') %} error{% endif %}">
             <label for="description">Description</label>
@@ -25,21 +26,38 @@
         </div>
 
         <div class="two fields">
-            {{ form.group('start_date', null, 'start_date', 'Start date') }}
-            {{ form.group('end_date', null, 'end_date', 'End date') }}
+            {{ form.group('start_date', null, 'start_date', 'Start date', null, null, 'dd/mm/YYYY') }}
+            {{ form.group('end_date', null, 'end_date', 'End date', null, null, 'dd/mm/YYYY') }}
         </div>
         <div class="two fields">
-            {{ form.group('start_time', null, 'start_time', 'Start time') }}
-            {{ form.group('end_time', null, 'end_time', 'End time') }}
+            {{ form.group('start_time', null, 'start_time', 'Start time', null, null, 'HH:mm') }}
+            {{ form.group('end_time', null, 'end_time', 'End time', null, null, 'HH:mm') }}
         </div>
 
         <div class="two fields">
-            {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Parent event') }}
+            {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
+            {{ form.select('location', locations, '_id', 'name', null, 'Select a location', null, 'location_id', "Location of event", 'required') }}
         </div>
+
+        <input type="hidden" name='point_id' id='point_id'>
 
         {{ csrf() }}
         <input type="submit" class="ui teal button" value="Create">
     </form>
 </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for location in locations %}
+                $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?latlng='
+                    + {{ location.latitude }} +',' + {{ location.longitude }} +'&sensor=true').done(function (data) {
+                    $.each(data, function (index, datum) {
+                        $('#location_id option[value="{{ location._id }}"]').text(datum[0].formatted_address);
+                    });
+                }).fail(function () {
+                    console.warn('AJAX Error ! Cannot reach the server ');
+                });
+            {% endfor %}
+        });
+    </script>
 {% endblock %}
