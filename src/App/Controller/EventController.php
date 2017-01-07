@@ -91,23 +91,45 @@ class EventController extends Controller
                 $this->validator->addError('category_id', 'Unknown category');
 
             // Verify if location exists
-            if (!$pointId || null === $this->mongo->findById('point', $pointId))
+            if (!$pointId || null === $this->mongo->findById('point', $pointId)) {
                 $this->validator->addError('point_id', 'Unknown location');
+            }else{
+
+            }
+
 
             if ($this->validator->isValid()) {
                 $start = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('start_date') . ' ' . $request->getParam('start_time'));
                 $end = \DateTime::createFromFormat('d/m/Y H:i', $request->getParam('end_date') . ' ' . $request->getParam('end_time'));
 
-                $this->mongo->insert([
+                $event = [
+                    '_id' => $this->mongo->objectIdFactory(),
                     'name' => $request->getParam('name'),
                     'description' => $request->getParam('description'),
                     'begins_at' => $this->mongo->getUTCDateTime($start),
                     'ends_at' => $this->mongo->getUTCDateTime($end),
                     'parent_id' => $parentId,
                     'category_id' => $categoryId,
-                    'point_id' => $pointId
-                ]);
-                $this->mongo->flush('event');
+                    'location' => $pointId
+                ];
+
+                $this->mongo->insert($event)->flush('event');
+
+                $point = $this->mongo->findById('point',$pointId);
+
+                $this->mongo->update(
+                    [
+                        '_id' => $this->mongo->getObjectId($pointId)],
+                    [
+                        'name' => $point->name,
+                        'address' => $point->address,
+                        'latitude' => $point->latitude,
+                        'longitude' => $point->longitude,
+                        'isEvent' => true,
+                        'event_id' => $event['_id'],
+                    ]
+                )->flush('point');
+
 
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" added');
                 return $this->redirect($response, 'get_events');
@@ -187,8 +209,7 @@ class EventController extends Controller
                     'parent_id' => $parentId,
                     'category_id' => $categoryId,
                     'point_id' => $pointId
-                ]);
-                $this->mongo->flush('event');
+                ])->flush('event');
 
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" edited');
                 return $this->redirect($response, 'get_events');
@@ -223,8 +244,22 @@ class EventController extends Controller
             $this->mongo->delete(['_id' => $child->_id]);
         }
 
-        $this->mongo->delete(['_id' => $this->mongo->getObjectId($id)]);
-        $this->mongo->flush('event');
+        $this->mongo->delete(['_id' => $this->mongo->getObjectId($id)])
+                    ->flush('event');
+
+        $points = $this->mongo->where('point', ['event_id' => $this->mongo->getObjectId($id)]);
+
+        foreach ($points as $point){
+            $this->mongo->update(['_id' => $this->mongo->getObjectId($point->_id)], [
+                'name' => $point->name,
+                'longitude' => $point->longitude,
+                'latitude' => $point->latitude,
+                'address' => $point->address,
+                'isEvent' => false,
+            ])->flush('point');
+        }
+
+
 
         $this->flash('success', 'Event "' . $event->name . '" deleted');
         return $this->redirect($response, 'get_events');
