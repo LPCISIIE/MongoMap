@@ -9,6 +9,7 @@
         <i class="circular calendar teal icon"></i>
         Edit event
     </h1>
+    <h2 class="ui center aligned header">{{ event.name }}</h2>
     <form action="" method="POST" class="ui form error">
         <div class="two fields">
             {{ form.group('name', event.name, 'name', 'Name') }}
@@ -32,6 +33,11 @@
         <div class="two fields">
             {{ form.group('start_time', mongo.dateTime(event.begins_at)|date('H:i'), 'start_time', 'Start time') }}
             {{ form.group('end_time', mongo.dateTime(event.ends_at)|date('H:i'), 'end_time', 'End time') }}
+        </div>
+
+        <div class="two fields">
+            {{ form.select('category_id', categories, '_id', 'name', null, 'Select a category', event.category_id, 'category_id', 'Category') }}
+            {{ form.select('point_id', points, '_id', 'name', null, 'Select a location', event.point_id, 'point_id', 'Location of event') }}
         </div>
 
         <div class="two fields">

@@ -8,11 +8,12 @@ body {
 }
 
 #map {
-    height: 500px;
+    margin: -22px 0 0 0;
+    height: 600px;
     width: 100%;
-    margin: 0px;
-    padding: 0px;
-    border: 3px #009890 solid;
+    padding: 0;
+    border-top: 3px #009890 solid;
+    border-bottom: 3px #009890 solid;
     border-radius : 2px;
 }
 

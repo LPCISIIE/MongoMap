@@ -14,7 +14,6 @@
             {{ form.group('name', null, 'name', 'Name') }}
         </div>
 
-
         <div class="field{% if has_error('description') %} error{% endif %}">
             <label for="description">Description</label>
             <textarea name="description" id="description" rows="8"></textarea>
@@ -35,11 +34,13 @@
         </div>
 
         <div class="two fields">
-            {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
-            {{ form.select('location', locations, '_id', 'name', null, 'Select a location', null, 'location_id', "Location of event", 'required') }}
+            {{ form.select('category_id', categories, '_id', 'name', null, 'Select a category', null, 'category_id', 'Category') }}
+            {{ form.select('point_id', points, '_id', 'name', null, 'Select a location', null, 'point_id', 'Location of event') }}
         </div>
 
-        <input type="hidden" name='point_id' id='point_id'>
+        <div class="two fields">
+            {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', null, 'parent_id', 'Does it belong to an event ?') }}
+        </div>
 
         {{ csrf() }}
         <input type="submit" class="ui teal button" value="Create">
