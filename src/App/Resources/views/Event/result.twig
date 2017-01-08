@@ -1,0 +1,53 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+    <div class="ui center aligned container">
+        <h1 class="ui icon header">
+            <i class="circular calendar teal icon"></i>
+            Results
+        </h1>
+        <p>Start: {{ mongo.dateTime(event.begins_at)|date('d/m/Y') }} at {{ mongo.dateTime(event.begins_at)|date('H:i') }}</p>
+        <p>End: {{ mongo.dateTime(event.ends_at)|date('d/m/Y') }} at {{ mongo.dateTime(event.ends_at)|date('H:i') }}</p>
+        <p>{{ event.description }}</p>
+
+        {% if event.children is not empty %}
+            <h2 class="ui horizontal divider header">Related events</h2>
+        {% endif %}
+        <div class="ui cards">
+            {% for child in event.children %}
+                <div class="ui teal card">
+                    <div class="content">
+                        <a href="{{ path_for('get_event', {'id': child._id}) }}" class="header">{{ child.name }}</a>
+                        <div class="description">
+                            <p>{{ child.description }}</p>
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <div>
+                        <span class="right floated">
+                            {{ mongo.dateTime(child.begins_at)|date('d/m/Y') }} at {{ mongo.dateTime(child.begins_at)|date('H:i') }}
+                        </span>
+                            <span>Start</span>
+                        </div>
+                        <div>
+                        <span class="right floated">
+                            {{ mongo.dateTime(child.ends_at)|date('d/m/Y') }} at {{ mongo.dateTime(child.ends_at)|date('H:i') }}
+                        </span>
+                            <span>End</span>
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <a href="{{ path_for('edit_event', {'id': child._id}) }}" class="left floated">
+                            <i class="edit icon"></i> Edit
+                        </a>
+                        <a href="{{ path_for('delete_event', {'id': child._id}) }}" class="right floated">
+                            Delete <i class="remove icon"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

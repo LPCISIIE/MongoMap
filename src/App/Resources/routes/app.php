@@ -13,7 +13,11 @@ $app->post('/comments/add','CommentController:add')->setName('add_comment');
 
 $app->get('/api/comments/{id}','CommentController:API_get')->setName('api_comment.get');
 
-$app->map(['GET', 'POST'], '/search/events', 'EventController:search')->setName('search_event');
+$app->group('/search', function() {
+    $this->group('/events', function() {
+        $this->map(['GET', 'POST'], '', 'EventController:search')->setName('search_event');
+    });
+});
 
 $app->group('/events', function () {
     $this->get('', 'EventController:get')->setName('get_events');
