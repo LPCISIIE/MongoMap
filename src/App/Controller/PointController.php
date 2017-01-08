@@ -50,6 +50,23 @@ class PointController extends Controller
         return $this->view->render($response, 'Point/add.twig');
     }
 
+    public function delete(Request $request, Response $response, $id)
+    {
+        $point = $this->mongo->findById('point', $id);
+
+        if (null === $point)
+            throw $this->notFoundException($request, $response);
+
+        // Delete related events
+        $this->mongo->delete(['location' => $point->id])->flush('event');
+
+        // Delete the point
+        $this->mongo->delete(['_id' => $this->mongo->getObjectId($id)])->flush('point');
+
+        $this->flash('success', 'Point "' . $point->name . '" deleted');
+        return $this->redirect($response, 'admin');
+    }
+
     public function getEvents(Request $request, Response $response, $id)
     {
         $point = $this->mongo->findById('point', $id);

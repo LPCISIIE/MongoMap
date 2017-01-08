@@ -8,8 +8,8 @@
     <div class="ui items">
         {% for point in points %}
             <div class="item">
-                <div id='{{ point._id }}' class="ui image">
-                    <img class='miniature' src='http://placehold.it/200x200' alt='Preview'/>
+                <div id="{{ point._id }}" class="ui image">
+                    <img class="miniature" src="http://placehold.it/200x200" alt="Preview">
                 </div>
                 <div class="middle aligned content">
                     <div class="header">
@@ -19,7 +19,7 @@
                         <p>{{ point.address }}</p>
                     </div>
                     <div class="extra">
-                        <div class="ui labeled icon circular right floated red button">
+                        <a href="{{ path_for('delete_point', {'id': point._id}) }}" class="ui labeled icon circular right floated red button">
                             <i class='trash icon'></i> Delete this location
                         </div>
                         <a href="{{ path_for('edit_point', {'id': point._id}) }}">

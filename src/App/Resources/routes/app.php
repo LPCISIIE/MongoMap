@@ -3,12 +3,12 @@
 $app->get('/', 'AppController:home')->setName('home');
 
 $app->map(['GET', 'POST'], '/points/add', 'PointController:add')->setName('add_point');
+$app->get('/points/{id}/delete', 'PointController:delete')->setName('delete_point');
+$app->get('/points/{id}/events', 'PointController:getEvents')->setName('get_point_events');
 
 $app->post('/comments/add','CommentController:add')->setName('add_comment');
 
 $app->get('/api/comments/{id}','CommentController:API_get')->setName('api_comment.get');
-
-$app->get('/myEvents/{id}', 'PointController:getEvents')->setName('get_point_events');
 
 $app->map(['GET', 'POST'], '/place/edit/{id}', 'PointController:edit')->setName('edit_point');
 
