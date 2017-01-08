@@ -112,7 +112,6 @@ class PointController extends Controller
         }
 
 
-
         return $this->view->render($response, 'Point/edit.twig', [
                     'point' => $this->mongo->findById('point',$id),
         ]);

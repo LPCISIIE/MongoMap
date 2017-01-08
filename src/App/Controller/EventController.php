@@ -296,15 +296,23 @@ class EventController extends Controller
 
                 switch($filter){
                     case('category'):
-                        $data = $this->mongo->where('event',['category_id' => $this->mongo->getObjectId($query)])->toArray();
+                        $data = $this->mongo->where('event',['category_id' => $query])->toArray();
                         break;
                     case('city'):
                     case('country'):
                         $data = [];
-                        foreach ($this->mongo->findAll('location') as $location) {
+                        foreach ($this->mongo->findAll('point') as $location) {
                             if (strpos($location->address, $query))
-                                array_push($data,$this->mongo->where('event',['location' => $location->_id]));
+                                array_push($data,$this->mongo->where('event',['location' => $location->_id])->toArray());
                         }
+
+                        if ($data == NULL || count($data) == 0 ){
+                            $this->flash('error','Oh oh, we did not find the result you were looking for :( ');
+                            return $this->redirect($response, 'search_event');
+                        }else{
+                            $data = $data[0];
+                        }
+
                     break;
                     default:
                         $this->flash('error','Something went wrong');
@@ -312,7 +320,11 @@ class EventController extends Controller
                     break;
                 }
 
-                $this->debug($data);
+                if ($data == NULL || count($data) == 0 ){
+                    $this->flash('error','Oh oh, we did not find the result you were looking for :( ');
+                    return $this->redirect($response, 'search_event');
+                }
+
                 return $this->view->render($response, 'Event/result.twig',[
                     'events' => $data
                 ]);
