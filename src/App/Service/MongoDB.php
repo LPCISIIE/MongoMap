@@ -187,6 +187,16 @@ class MongoDB
     }
 
     /**
+     * Create an ObjectId
+     *
+     * @return ObjectID
+     */
+    public function objectIdFactory()
+    {
+        return new ObjectID();
+    }
+
+    /**
      * Get UTCDateTime from DateTime
      *
      * @param \DateTime $dateTime

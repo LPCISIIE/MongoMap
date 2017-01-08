@@ -37,12 +37,14 @@
 
         <div class="two fields">
             {{ form.select('category_id', categories, '_id', 'name', null, 'Select a category', event.category_id, 'category_id', 'Category') }}
-            {{ form.select('point_id', points, '_id', 'name', null, 'Select a location', event.point_id, 'point_id', 'Location of event') }}
+            {{ form.select('point_id', points, '_id', 'name', null, 'Select a location', event.location, 'point_id', 'Location of event') }}
         </div>
 
         <div class="two fields">
             {{ form.select('parent_id', events, '_id', 'name', null, 'Select an event', event.parent_id, 'parent_id', 'Parent event') }}
         </div>
+
+        <input type="hidden" name='old_point_id' id="old_point_id" value="{{ event.location }}"/>
 
         {{ csrf() }}
         <input type="submit" class="ui teal button" value="Edit">

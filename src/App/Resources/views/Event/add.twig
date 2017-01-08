@@ -9,14 +9,28 @@
         <i class="circular calendar teal icon"></i>
         Create an event
     </h1>
+    {% if categories is empty %}
+     <div class="ui center aligned header">
+         <hr>
+         <h1>:-(</h1>
+         <h2> You have to create a category first ! </h2>
+     </div>
+    <a href="{{ path_for('add_category') }}">
+        <button class="huge ui circular orange labeled icon right floated button">
+             <i class="icon check"></i>
+             Gotcha
+        </button>
+    </a>
+
+    {% else %}
     <form action="" method="POST" class="ui form error">
         <div class="two fields">
-            {{ form.group('name', null, 'name', 'Name') }}
+            {{ form.group('name', null, 'name', 'Name', null, null, null, 'required') }}
         </div>
 
         <div class="field{% if has_error('description') %} error{% endif %}">
             <label for="description">Description</label>
-            <textarea name="description" id="description" rows="8"></textarea>
+            <textarea required name="description" id="description" rows="8"></textarea>
             {% if has_error('description') %}
                 <div class="ui error message">
                     <p>{{ error('description') }}</p>
@@ -25,17 +39,17 @@
         </div>
 
         <div class="two fields">
-            {{ form.group('start_date', null, 'start_date', 'Start date', null, null, 'dd/mm/YYYY') }}
-            {{ form.group('end_date', null, 'end_date', 'End date', null, null, 'dd/mm/YYYY') }}
+            {{ form.group('start_date', null, 'start_date', 'Start date', null, null, 'dd/mm/YYYY', 'required') }}
+            {{ form.group('end_date', null, 'end_date', 'End date', null, null, 'dd/mm/YYYY', 'required') }}
         </div>
         <div class="two fields">
-            {{ form.group('start_time', null, 'start_time', 'Start time', null, null, 'HH:mm') }}
-            {{ form.group('end_time', null, 'end_time', 'End time', null, null, 'HH:mm') }}
+            {{ form.group('start_time', null, 'start_time', 'Start time', null, null, 'HH:mm', 'required') }}
+            {{ form.group('end_time', null, 'end_time', 'End time', null, null, 'HH:mm', 'required') }}
         </div>
 
         <div class="two fields">
-            {{ form.select('category_id', categories, '_id', 'name', null, 'Select a category', null, 'category_id', 'Category') }}
-            {{ form.select('point_id', points, '_id', 'name', null, 'Select a location', null, 'point_id', 'Location of event') }}
+            {{ form.select('category_id', categories, '_id', 'name', null, 'Select a category', null, 'category_id', 'Category', 'required') }}
+            {{ form.select('point_id', points, '_id', 'name', null, 'Select a location', null, 'point_id', 'Location of event' , 'required') }}
         </div>
 
         <div class="two fields">
@@ -61,4 +75,5 @@
             {% endfor %}
         });
     </script>
+    {% endif %}
 {% endblock %}

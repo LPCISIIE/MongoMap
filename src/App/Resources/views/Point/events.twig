@@ -1,0 +1,39 @@
+{% extends 'layout.twig' %}
+
+{% import 'Macro/form.twig' as form %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1 class="ui center aligned icon header">
+            <i class="circular marker orange icon"></i>
+            Events in {{ address }}
+        </h1>
+        <hr> <br>
+        <div class="ui cards">
+        {% for event in events %}
+                <div class="card">
+                    <div class="content">
+                       <div class="header">
+                            {{ event.name }}
+                        </div>
+                        <div class="meta">
+                            {{ mongo.dateTime(event.begins_at)|date('d/m/Y (H:i)') ~ ' - ' ~ mongo.dateTime(event.ends_at)|date('d/m/Y (H:i)') }}
+                        </div>
+                        <div class="description">
+                          {{ event.description }}
+                        </div>
+                    </div>
+                    <div class="extra content">
+                            <a href = '{{ path_for( 'get_event', {'id' : event._id } ) }}' >
+                                <button class="fluid ui button positive basic" >
+                                    <i class="caret right icon"></i> Check details
+                                </button>
+                            </a>
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
+
+
+{% endblock %}
