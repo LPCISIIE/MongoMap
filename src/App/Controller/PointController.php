@@ -24,23 +24,18 @@ class PointController extends Controller
                     'address' => $request->getParam('address'),
                     'latitude' => $request->getParam('latitude'),
                     'longitude' => $request->getParam('longitude')
-                ]);
-                $this->mongo->flush('point');
+                ])->flush('point');
 
                 $this->mongo->insert([
                     'name' => $request->getParam('country'),
-                ]);
-
-                $this->mongo->flush('country');
+                ])->flush('country');
 
                 $country = $this->mongo->where('country', ['name' => $request->getParam('country')])->toArray();
 
-               $this->mongo->insert([
-                    'country_id' => $country[0]->_id,
+                $this->mongo->insert([
+                    'country_id' => $this->mongo->getObjectId($country[0]->_id),
                     'name' => $request->getParam('city'),
-                ]);
-
-                $this->mongo->flush('city');
+                ])->flush('city');
 
                 $this->flash('success', 'Point ' . $request->getParam('name') . ' added');
                 return $this->redirect($response, 'home');
@@ -120,6 +115,6 @@ class PointController extends Controller
 
         return $this->view->render($response, 'Point/edit.twig', [
                     'point' => $this->mongo->findById('point',$id),
-            ]);
+        ]);
     }
 }

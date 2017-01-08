@@ -125,7 +125,6 @@ class EventController extends Controller
                     ]
                 )->flush('point');
 
-
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" added');
                 return $this->redirect($response, 'get_events');
             }
@@ -181,8 +180,7 @@ class EventController extends Controller
             $oldPointId = $request->getParam('old_point_id');
 
             // Verify if parent event exists, if specified
-            $parent = $parentId ? $this->mongo->findById('event', $parentId) : null;
-            if ($parentId && null === $parent)
+            if ($parentId && null === $this->mongo->findById('event', $parentId))
                 $this->validator->addError('parent_id', 'Unknown event');
 
             // Verify if category exists
@@ -203,9 +201,9 @@ class EventController extends Controller
                     'description' => $request->getParam('description'),
                     'begins_at' => $this->mongo->getUTCDateTime($start),
                     'ends_at' => $this->mongo->getUTCDateTime($end),
-                    'parent_id' => $parentId,
-                    'category_id' => $categoryId,
-                    'location' => $pointId
+                    'parent_id' => $this->mongo->getObjectId($parentId),
+                    'category_id' => $this->mongo->getObjectId($categoryId),
+                    'location' => $this->mongo->getObjectId($pointId),
                 ])->flush('event');
 
                 $old_point = $this->mongo->findById('point', $oldPointId);
