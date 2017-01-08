@@ -88,7 +88,7 @@
                 loadComments('{{ point._id }}');
                 $('#eventLocation').empty();
                 {% if (point.numberEvent > 0) %}
-                     var button = "<a href='{{ path_for('get_event' , {'id': point.event_id})  }}'<button class='ui circular yellow labeled icon button'><i class='icon star'></i> Check the special event</button></a>";
+                     var button = "<a href='{{ path_for('get_point_events' , {'id': point._id})  }}'<button class='ui circular yellow labeled icon button'><i class='icon star'></i> {{ (point.numberEvent == 1  ? 'One event there' : point.numberEvent ~ ' events there' ) }} </button></a>";
                     $('#eventLocation').append(button);
                 {% endif %}
             });
