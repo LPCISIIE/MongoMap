@@ -29,7 +29,7 @@ class CityController extends Controller
     public function add(Request $request, Response $response)
     {
         if ($request->isPost()) {
-            $this->validator->validate($request, ['name' => V::notBlank()->alpha()]);
+            $this->validator->validate($request, ['name' => V::notBlank()]);
             $this->validator->validate($request, ['country_id' => V::notBlank()->alnum()], [
                 'notBlank' => 'Please select a country',
                 'alnum' => 'Invalid country'
@@ -65,7 +65,7 @@ class CityController extends Controller
             throw $this->notFoundException($request, $response);
 
         if ($request->isPost()) {
-            $this->validator->validate($request, ['name' => V::notBlank()->alpha()]);
+            $this->validator->validate($request, ['name' => V::notBlank()]);
             $this->validator->validate($request, ['country_id' => V::notBlank()->alnum()], [
                 'notBlank' => 'Please select a country',
                 'alnum' => 'Invalid country'
