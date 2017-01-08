@@ -8,7 +8,7 @@ body {
 }
 
 #map {
-    height : 100%;
+    height : 92%;
     width : 100%;
     top : 0;
     left : 0;
@@ -40,13 +40,13 @@ body {
     z-index: 999;
     position: fixed;
     right: 5em;
-    bottom: 2em;
+    bottom: 12%;
 }
 .menu-button2 {
      z-index: 999;
      position: fixed;
      right: 17em;
-     bottom: 2em;
+     bottom: 12%;
 }
 
 .flash {
@@ -58,4 +58,13 @@ body {
 
 .message {
     min-width:100%;
+}
+
+footer {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 100% !important;
+    height : 8% !important;
+    z-index: 50;
 }
