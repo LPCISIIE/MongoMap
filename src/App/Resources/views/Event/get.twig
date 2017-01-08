@@ -12,7 +12,7 @@
             <i class="star icon"></i> Create an event
         </a>
         {% if events is not empty %}
-            <a href="" class="ui circular teal button">
+            <a href="{{ path_for('search_event') }}" class="ui circular teal button">
                 <i class="search icon"></i> I am looking for an event
             </a>
         {% endif %}

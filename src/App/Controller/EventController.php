@@ -281,4 +281,6 @@ class EventController extends Controller
         $this->flash('success', 'Event "' . $event->name . '" deleted');
         return $this->redirect($response, 'get_events');
     }
+
+    public function search(Request $request, Response $response, $query, $keyword)
 }
