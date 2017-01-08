@@ -35,7 +35,7 @@ class CommentController extends Controller
              $this->mongo->insert([
                  'comment' => $request->getParam('comment'),
                  'author' => $request->getParam('author'),
-                 'location_id' => $request->getParam('location')
+                 'location_id' => $this->mongo->getObjectId($request->getParam('location')),
              ])->flush('comment');
 
              $this->flash('success', 'Comment added');
