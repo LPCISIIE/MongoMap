@@ -121,7 +121,7 @@ class EventController extends Controller
                         'address' => $point->address,
                         'latitude' => $point->latitude,
                         'longitude' => $point->longitude,
-                        'numberEvent' => (empty($point->numberEvent) ? 1 : $point->numberEvent++),
+                        'numberEvent' => (is_null($point->numberEvent) ? 1 : $point->numberEvent + 1),
                     ]
                 )->flush('point');
 
@@ -208,7 +208,7 @@ class EventController extends Controller
                     'location' => $pointId
                 ])->flush('event');
 
-                $old_point =  $this->mongo->where('event', ['location' => $oldPointId])->toArray();
+                $old_point = $this->mongo->findById('point', $oldPointId);
 
                 if ($old_point != null ){
                     $this->mongo->update(['_id' => $this->mongo->getObjectId($old_point->_id)], [
@@ -216,19 +216,19 @@ class EventController extends Controller
                         'longitude' => $old_point->longitude,
                         'latitude' => $old_point->latitude,
                         'address' => $old_point->address,
-                        'numberEvent' => $old_point->numberEvent--,
+                        'numberEvent' => $old_point->numberEvent - 1,
                     ])->flush('point');
                 }
 
-                    $newPoint = $this->mongo->findById('point',$this->mongo->getObjectId($pointId));
+                $newPoint = $this->mongo->findById('point', $pointId);
 
-                    $this->mongo->update(['_id' => $this->mongo->getObjectId($pointId)], [
-                        'name' => $newPoint->name,
-                        'longitude' => $newPoint->longitude,
-                        'latitude' => $newPoint->latitude,
-                        'address' => $newPoint->address,
-                        'numberEvent' => (empty($point->numberEvent) ? 1 : $point->numberEvent++),
-                    ])->flush('point');
+                $this->mongo->update(['_id' => $this->mongo->getObjectId($pointId)], [
+                    'name' => $newPoint->name,
+                    'longitude' => $newPoint->longitude,
+                    'latitude' => $newPoint->latitude,
+                    'address' => $newPoint->address,
+                    'numberEvent' => (($newPoint->numberEvent == null) ? 1 : $newPoint->numberEvent + 1),
+                ])->flush('point');
 
 
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" edited');
@@ -260,7 +260,7 @@ class EventController extends Controller
 
         $children = $this->mongo->where('event', ['parent_id' => $id]);
 
-        $points =  $this->mongo->where('event', ['location' => $id])->toArray();
+        $points =  $this->mongo->where('point', ['_id' => $this->mongo->getObjectId($event->location)]);
 
         foreach ($points as $point){
             $this->mongo->update(['_id' => $this->mongo->getObjectId($point->_id)], [
@@ -278,8 +278,6 @@ class EventController extends Controller
 
         $this->mongo->delete(['_id' => $this->mongo->getObjectId($id)])
                     ->flush('event');
-
-
 
         $this->flash('success', 'Event "' . $event->name . '" deleted');
         return $this->redirect($response, 'get_events');
