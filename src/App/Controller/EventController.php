@@ -180,8 +180,7 @@ class EventController extends Controller
             $oldPointId = $request->getParam('old_point_id');
 
             // Verify if parent event exists, if specified
-            $parent = $parentId ? $this->mongo->findById('event', $parentId) : null;
-            if ($parentId && null === $parent)
+            if ($parentId && null === $this->mongo->findById('event', $parentId))
                 $this->validator->addError('parent_id', 'Unknown event');
 
             // Verify if category exists
