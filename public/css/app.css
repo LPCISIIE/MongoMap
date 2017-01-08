@@ -94,3 +94,9 @@ footer {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.miniature {
+    width: 200px !important;
+    height: 200px !important ;
+}
+

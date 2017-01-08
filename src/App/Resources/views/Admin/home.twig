@@ -4,6 +4,48 @@
 
 <div class="ui container">
     {% include 'Admin/tabs.twig' with {'tab': 'home'} %}
+
+    <div class="ui items">
+        {% for point in points %}
+            <div class="item">
+                <div id='{{ point._id }}' class="ui image">
+                    <img class='miniature' src='http://placehold.it/200x200' alt='Preview'/>
+                </div>
+                <div class="middle aligned content">
+                    <div class="header">
+                        {{ point.name }}
+                    </div>
+                    <div class="description">
+                        <p>{{ point.address }}</p>
+                    </div>
+                    <div class="extra">
+                        <div class="ui labeled icon circular right floated red button">
+                            <i class='trash icon'></i> Delete this location
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for point in points %}
+            $.getJSON('https://pixabay.com/api/?key=4212689-d93fc3924928f12a7c673f21f&q={{ point.name|url_encode }}&image_type=photo').done(function (data) {
+                $.each(data, function (index, datum) {
+                    if (datum[0] instanceof Object){
+                        $('#{{ point._id }}').empty();
+                        var img = "<img class='miniature' src="+(datum[0].webformatURL)+" alt='Preview'/>";
+                        $('#{{ point._id }}').append(img);
+                    }
+
+                });
+            }).fail(function () {
+                console.warn('AJAX Error ! Cannot reach the server ');
+            });
+            {% endfor %}
+        });
+    </script>
 
 {% endblock %}
