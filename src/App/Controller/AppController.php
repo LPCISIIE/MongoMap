@@ -17,13 +17,10 @@ class AppController extends Controller
         $query =  $this->mongo->findAll('point')->toArray();
         $time2 = new \DateTime();
         $difference = $time1->diff($time2);
-        $milliseconds = round ( $difference->f , 15 ); ;
-
-
 
         return $this->view->render($response, 'App/home.twig', [
             'points' => $query,
-            'time' =>  $milliseconds,
+            'time' =>  round( $difference->f, 15 ),
         ]);
     }
 }
