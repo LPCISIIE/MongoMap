@@ -278,4 +278,62 @@ class EventController extends Controller
         $this->flash('success', 'Event "' . $event->name . '" deleted');
         return $this->redirect($response, 'get_events');
     }
+
+    public function search(Request $request, Response $response, $filter=null, $keyword=null)
+    {
+        if ($request->isPost()){
+
+            if ($this->validator->validate($request, [
+                'filter' => V::notBlank(),
+                'query' => V::notBlank(),
+            ])->isValid()) {
+
+                $query = $request->getParam('query');
+                $filter = $request->getParam('filter');
+
+                switch($filter){
+                    case('category'):
+                        $data = $this->mongo->where('event',['category_id' => $query])->toArray();
+                        break;
+                    case('city'):
+                    case('country'):
+                        $data = [];
+                        foreach ($this->mongo->findAll('point') as $location) {
+                            if (strpos($location->address, $query))
+                                array_push($data,$this->mongo->where('event',['location' => $location->_id])->toArray());
+                        }
+
+                        if ($data == NULL || count($data) == 0 ){
+                            $this->flash('error','Oh oh, we did not find the result you were looking for :( ');
+                            return $this->redirect($response, 'search_event');
+                        }else{
+                            $data = $data[0];
+                        }
+
+                    break;
+                    default:
+                        $this->flash('error','Something went wrong');
+                        $this->redirect($response, 'home');
+                    break;
+                }
+
+                if ($data == NULL || count($data) == 0 ){
+                    $this->flash('error','Oh oh, we did not find the result you were looking for :( ');
+                    return $this->redirect($response, 'search_event');
+                }
+
+                return $this->view->render($response, 'Event/result.twig',[
+                    'events' => $data
+                ]);
+
+            }
+
+        }
+
+        return $this->view->render($response, 'Event/search.twig',[
+            'categories' => $this->mongo->findAll('category')->toArray(),
+            'countries' => $this->mongo->findAll('country')->toArray(),
+            'cities' => $this->mongo->findAll('city')->toArray(),
+        ]);
+    }
 }

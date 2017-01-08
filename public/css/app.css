@@ -100,3 +100,6 @@ footer {
     height: 200px !important ;
 }
 
+.hide {
+    visibility : hidden !important;
+}

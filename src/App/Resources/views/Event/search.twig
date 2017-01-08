@@ -1,0 +1,71 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+
+    <form action='{{ search_event }}' method="POST">
+        <div class="ui container">
+            <h1 class="ui center aligned icon header">
+                <i class="circular search teal icon"></i>
+                Search an event
+            </h1>
+
+            <div id='filterForm' class="ui fluid search selection dropdown">
+                <input type="hidden" id="filter" name="filter">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select a filter</div>
+                <div class="menu">
+                    {{ (categories is not empty ? '<div class="item" data-value="category">Category</div>') }}
+                    {{ (cities is not empty? '<div class="item" data-value="city">City</div>') }}
+                    {{ (countries is not empty ? '<div class="item" data-value="country">Country</div>') }}
+                </div>
+            </div>
+            <br>
+            <div id='queryForm' class="ui fluid search selection dropdown hide">
+                <input type="hidden" id="query" name="query">
+                <i class="dropdown icon"></i>
+                <div id='placeholder' class="default text"></div>
+                <div id='menu' class="menu"></div>
+            </div>
+            <br>
+            {{ csrf() }}
+            <button id='send' class='ui hide large circular labeled right floated green icon button' type='submit'><i class='search icon'></i>Search</button>
+        </div>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#filterForm').dropdown({
+                 onChange: function(value, text, $selectedItem) {
+                     $('#queryForm').removeClass('hide');
+                     $('#filter').val(value);
+                     $('#menu').empty();
+                     switch(value){
+                         case 'category' :
+                             $('#placeholder').text('Select a category');
+                             {% for category in categories %}
+                                 $('#menu').append('<div class="item" data-value="{{ category._id }}">{{ category.name }}</div>');
+                             {% endfor %}
+                             break;
+                         case 'city' :
+                             $('#placeholder').text('Select a city');
+                             {% for city in cities %}
+                                  $('#menu').append('<div class="item" data-value="{{ city.name }}">{{ city.name }}</div>');
+                             {% endfor %}
+                             break;
+                         case 'country' :
+                             $('#placeholder').text('Select a country');
+                             {% for country in countries %}
+                                   $('#menu').append('<div class="item" data-value="{{ country.name }}">{{ country.name }}</div>');
+                             {% endfor %}
+                         break;
+                     }
+                 }
+            });
+            $('#queryForm').dropdown({
+                onChange: function(value, text, $selectedItem) {
+                    $('#query').val(value);
+                    $('#send').removeClass('hide');
+                }
+            });
+        });
+    </script>
+{% endblock %}

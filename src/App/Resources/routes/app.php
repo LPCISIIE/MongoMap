@@ -2,15 +2,22 @@
 
 $app->get('/', 'AppController:home')->setName('home');
 
-$app->map(['GET', 'POST'], '/points/add', 'PointController:add')->setName('add_point');
-$app->get('/points/{id}/delete', 'PointController:delete')->setName('delete_point');
-$app->get('/points/{id}/events', 'PointController:getEvents')->setName('get_point_events');
+$app->group('/places', function () {
+    $this->map(['GET', 'POST'], '/add', 'PointController:add')->setName('add_point');
+    $this->map(['GET', 'POST'], '/{id}/edit', 'PointController:edit')->setName('edit_point');
+    $this->get('/{id}/delete', 'PointController:delete')->setName('delete_point');
+    $this->get('/{id}/events', 'PointController:getEvents')->setName('get_point_events');
+});
 
 $app->post('/comments/add','CommentController:add')->setName('add_comment');
 
 $app->get('/api/comments/{id}','CommentController:API_get')->setName('api_comment.get');
 
-$app->map(['GET', 'POST'], '/place/edit/{id}', 'PointController:edit')->setName('edit_point');
+$app->group('/search', function() {
+    $this->group('/events', function() {
+        $this->map(['GET', 'POST'], '', 'EventController:search')->setName('search_event');
+    });
+});
 
 $app->group('/events', function () {
     $this->get('', 'EventController:get')->setName('get_events');
