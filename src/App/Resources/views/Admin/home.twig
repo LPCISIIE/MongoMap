@@ -21,6 +21,11 @@
                     <div class="extra">
                         <a href="{{ path_for('delete_point', {'id': point._id}) }}" class="ui labeled icon circular right floated red button">
                             <i class='trash icon'></i> Delete this location
+                        </div>
+                        <a href="{{ path_for('edit_point', {'id': point._id}) }}">
+                            <div class="ui labeled icon circular right floated orange button">
+                                    <i class='edit icon'></i> Edit this location
+                            </div>
                         </a>
                     </div>
                 </div>
