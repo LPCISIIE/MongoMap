@@ -43,7 +43,7 @@ class CityController extends Controller
             if ($this->validator->isValid()) {
                 $this->mongo->insert([
                     'name' => $request->getParam('name'),
-                    'country_id' => $this->mongo->getObjectId($country->_id),
+                    'country_id' => $country->_id,
                 ]);
                 $this->mongo->flush('city');
 
