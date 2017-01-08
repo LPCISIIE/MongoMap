@@ -9,6 +9,20 @@
         <i class="circular calendar teal icon"></i>
         Create an event
     </h1>
+    {% if categories is empty %}
+     <div class="ui center aligned header">
+         <hr>
+         <h1>:-(</h1>
+         <h2> You have to create a category first ! </h2>
+     </div>
+    <a href="{{ path_for('add_category') }}">
+        <button class="huge ui circular orange labeled icon right floated button">
+             <i class="icon check"></i>
+             Gotcha
+        </button>
+    </a>
+
+    {% else %}
     <form action="" method="POST" class="ui form error">
         <div class="two fields">
             {{ form.group('name', null, 'name', 'Name') }}
@@ -61,4 +75,5 @@
             {% endfor %}
         });
     </script>
+    {% endif %}
 {% endblock %}
