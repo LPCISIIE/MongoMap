@@ -7,6 +7,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\InvalidArgumentException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\WriteResult;
@@ -78,8 +79,13 @@ class MongoDB
      */
     public function findById($collection, $id)
     {
-        if (is_string($id))
-            $id = $this->getObjectId($id);
+        if (is_string($id)) {
+            try {
+                $id = $this->getObjectId($id);
+            } catch (InvalidArgumentException $e) {
+                return null;
+            }
+        }
 
         $result = $this->where($collection, ['_id' => $id])->toArray();
 

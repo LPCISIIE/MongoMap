@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use MongoDB\BSON\Timestamp;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -14,13 +13,13 @@ class AppController extends Controller
          *  We thought about you Mr Nourissier ;-)
          */
         $time1 = new \DateTime();
-        $query =  $this->mongo->findAll('point')->toArray();
+        $points =  $this->mongo->findAll('point');
         $time2 = new \DateTime();
-        $difference = $time1->diff($time2);
+        $diff = $time1->getTimestamp() - $time2->getTimestamp();
 
         return $this->view->render($response, 'App/home.twig', [
-            'points' => $query,
-            'time' =>  round( $difference->f, 15 ),
+            'points' => $points->toArray(),
+            'time' =>  $diff
         ]);
     }
 }

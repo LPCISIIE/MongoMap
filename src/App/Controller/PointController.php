@@ -52,10 +52,14 @@ class PointController extends Controller
 
     public function getEvents(Request $request, Response $response, $id)
     {
+        $point = $this->mongo->findById('point', $id);
+
+        if (null === $point)
+            throw $this->notFoundException($request, $response);
 
         return $this->view->render($response, 'Point/events.twig', [
-              'address' => $this->mongo->findById('point',$id)->address,
-              'events' => $this->mongo->where('event', ['location' => $id])->toArray()
+              'address' => $point->address,
+              'events' => $this->mongo->where('event', ['location' => $this->mongo->getObjectId($id)])->toArray()
         ]);
     }
 }
