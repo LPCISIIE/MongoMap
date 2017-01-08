@@ -21,7 +21,7 @@ class AppController extends Controller
 
         return $this->view->render($response, 'App/home.twig', [
             'points' => $points->toArray(),
-            'time' =>  $diff
+            'time' =>  round($diff,10)
         ]);
     }
 }
