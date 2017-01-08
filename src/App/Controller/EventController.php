@@ -260,14 +260,7 @@ class EventController extends Controller
 
         $children = $this->mongo->where('event', ['parent_id' => $id]);
 
-        foreach ($children as $child) {
-            $this->mongo->delete(['_id' => $child->_id]);
-        }
-
-        $this->mongo->delete(['_id' => $this->mongo->getObjectId($id)])
-                    ->flush('event');
-
-        $points = $this->mongo->where('point', ['event_id' => $this->mongo->getObjectId($id)]);
+        $points =  $this->mongo->where('event', ['location' => $id])->toArray();
 
         foreach ($points as $point){
             $this->mongo->update(['_id' => $this->mongo->getObjectId($point->_id)], [
@@ -278,6 +271,15 @@ class EventController extends Controller
                 'numberEvent' => 0,
             ])->flush('point');
         }
+
+        foreach ($children as $child) {
+            $this->mongo->delete(['_id' => $child->_id]);
+        }
+
+        $this->mongo->delete(['_id' => $this->mongo->getObjectId($id)])
+                    ->flush('event');
+
+
 
         $this->flash('success', 'Event "' . $event->name . '" deleted');
         return $this->redirect($response, 'get_events');
