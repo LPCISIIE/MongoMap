@@ -282,5 +282,48 @@ class EventController extends Controller
         return $this->redirect($response, 'get_events');
     }
 
-    public function search(Request $request, Response $response, $query, $keyword)
+    public function search(Request $request, Response $response, $filter=null, $keyword=null)
+    {
+        if ($request->isPost()){
+
+            if ($this->validator->validate($request, [
+                'filter' => V::notBlank(),
+                'query' => V::notBlank(),
+            ])->isValid()) {
+
+                $query = $request->getParam('query');
+                $filter = $request->getParam('filter');
+
+                switch($filter){
+                    case('category'):
+                        $data = $this->mongo->where('event',['category' => $this->mongo->getObjectId($query)]);
+                    break;
+                    case('city'):
+                    case('country'):
+                        $data = [];
+                        foreach ($this->mongo->findAll('location') as $location) {
+                            if (strpos($location->address, $query))
+                                array_push($data,$this->mongo->where('event',['location' => $location->_id]));
+                        }
+                    break;
+                    default:
+                        $this->flash('error','Something went wrong');
+                        $this->redirect($response, 'home');
+                    break;
+                }
+
+                $this->view->render($response, 'Event/result.twig',[
+                    'events' => $data
+                ]);
+
+            }
+
+        }
+
+        $this->view->render($response, 'Event/search.twig',[
+            'categories' => $this->mongo->findAll('category')->toArray(),
+            'countries' => $this->mongo->findAll('country')->toArray(),
+            'cities' => $this->mongo->findAll('city')->toArray(),
+        ]);
+    }
 }
