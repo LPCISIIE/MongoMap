@@ -229,8 +229,7 @@ class EventController extends Controller
                     'address' => $newPoint->address,
                     'numberEvent' => (($newPoint->numberEvent == null) ? 1 : $newPoint->numberEvent + 1),
                 ])->flush('point');
-
-
+                
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" edited');
                 return $this->redirect($response, 'get_events');
             }
