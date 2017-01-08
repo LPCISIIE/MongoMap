@@ -79,7 +79,7 @@
                 title: '{{ point.name }}',
                 position: {lat: {{ point.latitude }}, lng: {{ point.longitude }} },
                 map: map,
-                {{ ( point.isEvent == 'true' ? 'icon : markerEvent,' ) }}
+                {{ ( point.numberEvent > 0 ? 'icon : markerEvent,' ) }}
             }).addListener('click', function() {
                 $('#modalTitle').text('Comments about {{ point.name }}');
                 $('#comments-modal').modal('show');
@@ -87,7 +87,7 @@
                 $('#commentsArea').empty();
                 loadComments('{{ point._id }}');
                 $('#eventLocation').empty();
-                {% if (point.isEvent is not empty) %}
+                {% if (point.numberEvent > 0) %}
                      var button = "<a href='{{ path_for('get_event' , {'id': point.event_id})  }}'<button class='ui circular yellow labeled icon button'><i class='icon star'></i> Check the special event</button></a>";
                     $('#eventLocation').append(button);
                 {% endif %}
