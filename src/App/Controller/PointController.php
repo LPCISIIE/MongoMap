@@ -64,7 +64,7 @@ class PointController extends Controller
         $this->mongo->delete(['_id' => $this->mongo->getObjectId($id)])->flush('point');
 
         $this->flash('success', 'Point "' . $point->name . '" deleted');
-        return $this->redirect($response, 'home');
+        return $this->redirect($response, 'admin');
     }
 
     public function getEvents(Request $request, Response $response, $id)
