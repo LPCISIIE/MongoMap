@@ -36,6 +36,15 @@ body {
     float:right !important;
 }
 
-.menu-button {
-    z-index: 9999;
+.menu-button1 {
+    z-index: 999;
+    position: fixed;
+    right: 5em;
+    bottom: 2em;
+}
+.menu-button2 {
+     z-index: 999;
+     position: fixed;
+     right: 17em;
+     bottom: 2em;
 }
