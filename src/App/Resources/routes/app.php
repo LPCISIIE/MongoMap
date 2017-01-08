@@ -10,6 +10,8 @@ $app->get('/api/comments/{id}','CommentController:API_get')->setName('api_commen
 
 $app->get('/myEvents/{id}', 'PointController:getEvents')->setName('get_point_events');
 
+$app->map(['GET', 'POST'], '/place/edit/{id}', 'PointController:edit')->setName('edit_point');
+
 $app->group('/events', function () {
     $this->get('', 'EventController:get')->setName('get_events');
     $this->map(['GET', 'POST'], '/add', 'EventController:add')->setName('add_event');

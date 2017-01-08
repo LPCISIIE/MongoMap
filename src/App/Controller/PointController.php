@@ -62,4 +62,47 @@ class PointController extends Controller
               'events' => $this->mongo->where('event', ['location' => $this->mongo->getObjectId($id)])->toArray()
         ]);
     }
+
+    public function edit(Request $request, Response $response, $id)
+    {
+        if ($request->isPost()){
+            $this->validator->validate($request, [
+                'name' => V::notBlank(),
+                'address' => V::notBlank(),
+                'latitude' => V::numeric(),
+                'longitude' => V::numeric()
+            ]);
+
+            // Verify if location exists
+            if (!$id || null === $this->mongo->findById('point', $id))
+                $this->validator->addError('point_id', 'Unknown location');
+
+            if ($this->validator->isValid()) {
+                $this->mongo->update(['_id' => $this->mongo->getObjectId($id)], [
+                    'name' => $request->getParam('name'),
+                    'address' => $request->getParam('address'),
+                    'latitude' => $request->getParam('latitude'),
+                    'longitude' => $request->getParam('longitude')
+                ])->flush('point');
+
+                $this->flash('success', 'Point ' . $request->getParam('name') . ' edited');
+            }else{
+                $this->flash('error', 'Something went wrong ');
+            }
+
+            return $this->redirect($response, 'home');
+        }
+
+        // Verify if location exists
+        if (!$id || null === $this->mongo->findById('point', $id)) {
+            $this->flash('error', 'Something went wrong ');
+            return $this->redirect($response, 'home');
+        }
+
+
+
+        return $this->view->render($response, 'Point/edit.twig', [
+                    'point' => $this->mongo->findById('point',$id),
+            ]);
+    }
 }

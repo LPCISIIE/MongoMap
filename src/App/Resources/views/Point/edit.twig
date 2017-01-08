@@ -1,0 +1,54 @@
+{% extends 'layout.twig' %}
+
+{% import 'Macro/form.twig' as form %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1 class="ui center aligned icon header">
+            <i class="circular marker teal icon"></i>
+            Edit {{ point.name }}
+        </h1>
+        <form action="" method="POST" class="ui form error">
+            <div class="ui grid">
+                <div class="four wide column"></div>
+                <div class="eight wide column">
+                    {{ form.group('name', point.name, 'name', 'Name') }}
+                    <div id="locationField">
+                        {{ form.group('address', point.address , 'autocomplete', 'Address') }}
+                    </div>
+
+                    {{ form.group('latitude', point.latitude, 'latitude', null, null, 'hidden') }}
+                    {{ form.group('longitude', point.longitude, 'longitude', null, null, 'hidden') }}
+
+                    {{ csrf() }}
+                    <input type="submit" class="fluid ui teal button" value="Edit">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var placeSearch, autocomplete;
+
+        function initAutocomplete() {
+            autocomplete = new google.maps.places.Autocomplete(
+                    (document.getElementById('autocomplete')),
+                    {types: ['geocode']});
+            autocomplete.addListener('place_changed', fillInAddress);
+        }
+
+
+        function fillInAddress() {
+            var place = autocomplete.getPlace();
+            document.getElementById('latitude').value = place.geometry.location.lat();
+            document.getElementById('longitude').value = place.geometry.location.lng();
+
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkIJ7rDp2F0J39TH8DRIvqtYHrJx-Zsi8&signed_in=true&libraries=places&callback=initAutocomplete"
+            async defer>
+    </script>
+
+{% endblock %}
