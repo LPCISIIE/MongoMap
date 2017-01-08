@@ -29,7 +29,7 @@ class CityController extends Controller
     public function add(Request $request, Response $response)
     {
         if ($request->isPost()) {
-            $this->validator->validate($request, ['name' => V::notBlank()->alpha()]);
+            $this->validator->validate($request, ['name' => V::notBlank()]);
             $this->validator->validate($request, ['country_id' => V::notBlank()->alnum()], [
                 'notBlank' => 'Please select a country',
                 'alnum' => 'Invalid country'
@@ -43,7 +43,7 @@ class CityController extends Controller
             if ($this->validator->isValid()) {
                 $this->mongo->insert([
                     'name' => $request->getParam('name'),
-                    'country_id' => $this->mongo->getObjectId($country->_id),
+                    'country_id' => $country->_id,
                 ]);
                 $this->mongo->flush('city');
 
@@ -65,7 +65,7 @@ class CityController extends Controller
             throw $this->notFoundException($request, $response);
 
         if ($request->isPost()) {
-            $this->validator->validate($request, ['name' => V::notBlank()->alpha()]);
+            $this->validator->validate($request, ['name' => V::notBlank()]);
             $this->validator->validate($request, ['country_id' => V::notBlank()->alnum()], [
                 'notBlank' => 'Please select a country',
                 'alnum' => 'Invalid country'

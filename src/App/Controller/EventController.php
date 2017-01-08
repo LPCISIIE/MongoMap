@@ -16,7 +16,7 @@ class EventController extends Controller
             'description' => $event->description,
             'begins_at' => $event->begins_at,
             'ends_at' => $event->ends_at,
-            'children' => $this->mongo->where('event', ['parent_id' => $event->_id->__toString()])->toArray()
+            'children' => $this->mongo->where('event', ['parent_id' => $event->_id])->toArray()
         ];
 
         return $this->view->render($response, 'Event/show.twig', [
@@ -82,8 +82,7 @@ class EventController extends Controller
             $pointId = $request->getParam('point_id');
 
             // Verify if parent event exists, if specified
-            $parent = $parentId ? $this->mongo->findById('event', $parentId) : null;
-            if ($parentId && null === $parent)
+            if ($parentId && null === $this->mongo->findById('event', $parentId))
                 $this->validator->addError('parent_id', 'Unknown event');
 
             // Verify if category exists
@@ -104,18 +103,18 @@ class EventController extends Controller
                     'description' => $request->getParam('description'),
                     'begins_at' => $this->mongo->getUTCDateTime($start),
                     'ends_at' => $this->mongo->getUTCDateTime($end),
-                    'parent_id' => $parentId,
-                    'category_id' => $categoryId,
+                    'parent_id' => $parentId ? $this->mongo->getObjectId($parentId) : null,
+                    'category_id' => $this->mongo->getObjectId($categoryId),
                     'location' => $this->mongo->getObjectId($pointId)
                 ];
 
                 $this->mongo->insert($event)->flush('event');
 
-                $point = $this->mongo->findById('point',$pointId);
+                $point = $this->mongo->findById('point', $pointId);
 
-                $this->mongo->update(
-                    [
-                        '_id' => $this->mongo->getObjectId($pointId)],
+                $this->mongo->update([
+                        '_id' => $point->_id
+                    ],
                     [
                         'name' => $point->name,
                         'address' => $point->address,
@@ -180,8 +179,7 @@ class EventController extends Controller
             $oldPointId = $request->getParam('old_point_id');
 
             // Verify if parent event exists, if specified
-            $parent = $parentId ? $this->mongo->findById('event', $parentId) : null;
-            if ($parentId && null === $parent)
+            if ($parentId && null === $this->mongo->findById('event', $parentId))
                 $this->validator->addError('parent_id', 'Unknown event');
 
             // Verify if category exists
@@ -228,8 +226,7 @@ class EventController extends Controller
                     'address' => $newPoint->address,
                     'numberEvent' => (($newPoint->numberEvent == null) ? 1 : $newPoint->numberEvent + 1),
                 ])->flush('point');
-
-
+                
                 $this->flash('success', 'Event "' . $request->getParam('name') . '" edited');
                 return $this->redirect($response, 'get_events');
             }
@@ -257,9 +254,9 @@ class EventController extends Controller
         if (null === $event)
             throw $this->notFoundException($request, $response);
 
-        $children = $this->mongo->where('event', ['parent_id' => $id]);
+        $children = $this->mongo->where('event', ['parent_id' => $this->mongo->getObjectId($id)]);
 
-        $points =  $this->mongo->where('point', ['_id' => $this->mongo->getObjectId($event->location)]);
+        $points = $this->mongo->where('point', ['_id' => $event->location]);
 
         foreach ($points as $point){
             $this->mongo->update(['_id' => $this->mongo->getObjectId($point->_id)], [

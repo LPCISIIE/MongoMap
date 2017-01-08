@@ -26,15 +26,20 @@ class PointController extends Controller
                     'longitude' => $request->getParam('longitude')
                 ])->flush('point');
 
-                $this->mongo->insert([
-                    'name' => $request->getParam('country'),
-                ])->flush('country');
+                $countryName = $request->getParam('country');
+                $country = $this->mongo->find('country', ['name' => $countryName]);
 
-                $country = $this->mongo->where('country', ['name' => $request->getParam('country')])->toArray();
+                if (null === $country) {
+                    $this->mongo->insert([
+                        'name' => $countryName
+                    ])->flush('country');
+
+                    $country = $this->mongo->find('country', ['name' => $countryName]);
+                }
 
                 $this->mongo->insert([
-                    'country_id' => $this->mongo->getObjectId($country[0]->_id),
                     'name' => $request->getParam('city'),
+                    'country_id' => $country->_id
                 ])->flush('city');
 
                 $this->flash('success', 'Point ' . $request->getParam('name') . ' added');
@@ -98,7 +103,7 @@ class PointController extends Controller
                 ])->flush('point');
 
                 $this->flash('success', 'Point ' . $request->getParam('name') . ' edited');
-            }else{
+            } else {
                 $this->flash('error', 'Something went wrong ');
             }
 
@@ -111,9 +116,8 @@ class PointController extends Controller
             return $this->redirect($response, 'home');
         }
 
-
         return $this->view->render($response, 'Point/edit.twig', [
-                    'point' => $this->mongo->findById('point',$id),
+            'point' => $this->mongo->findById('point', $id)
         ]);
     }
 }
