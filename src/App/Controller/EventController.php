@@ -312,7 +312,7 @@ class EventController extends Controller
                     break;
                 }
 
-                $this->view->render($response, 'Event/result.twig',[
+                return $this->view->render($response, 'Event/result.twig',[
                     'events' => $data
                 ]);
 
@@ -320,7 +320,7 @@ class EventController extends Controller
 
         }
 
-        $this->view->render($response, 'Event/search.twig',[
+        return $this->view->render($response, 'Event/search.twig',[
             'categories' => $this->mongo->findAll('category')->toArray(),
             'countries' => $this->mongo->findAll('country')->toArray(),
             'cities' => $this->mongo->findAll('city')->toArray(),
