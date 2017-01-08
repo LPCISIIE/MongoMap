@@ -10,9 +10,8 @@
             Events in {{ address }}
         </h1>
         <hr> <br>
-
-        {% for event in events %}
         <div class="ui cards">
+        {% for event in events %}
                 <div class="card">
                     <div class="content">
                        <div class="header">
@@ -26,14 +25,13 @@
                         </div>
                     </div>
                     <div class="extra content">
-                        <div class="ui two buttons">
                             <a href = '{{ path_for( 'get_event', {'id' : event._id } ) }}' >
-                                <div class="ui basic green button">
+                                <button class="fluid ui button positive basic" >
                                     <i class="caret right icon"></i> Check details
-                                </div>
+                                </button>
                             </a>
-                        </div>
                     </div>
+                </div>
                 {% endfor %}
         </div>
 
