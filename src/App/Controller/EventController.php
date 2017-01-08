@@ -296,8 +296,8 @@ class EventController extends Controller
 
                 switch($filter){
                     case('category'):
-                        $data = $this->mongo->where('event',['category' => $this->mongo->getObjectId($query)]);
-                    break;
+                        $data = $this->mongo->where('event',['category_id' => $this->mongo->getObjectId($query)])->toArray();
+                        break;
                     case('city'):
                     case('country'):
                         $data = [];
@@ -312,6 +312,7 @@ class EventController extends Controller
                     break;
                 }
 
+                $this->debug($data);
                 return $this->view->render($response, 'Event/result.twig',[
                     'events' => $data
                 ]);
