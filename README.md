@@ -7,15 +7,47 @@
    </p>  <br>
    
 ##MongoMap is a web application for creating events on a Google Maps
+<br>
+
+## Architecture 
 
 ### Engines used
-
-- Google Maps
 - MongoDB
 - SensioLabs Twig
 - Slim Framework
-- Twitter Bootstrap
+- Semantic UI
+
+### API used
+- Google Maps
+- PixaBay
+
+<br>
+
+## Installation
+
+### 1. Download the latest version of the application
+
+```
+$ git clone https://github.com/TPCISIIE/MongoMap.git
+```
+
+### 2. Set up the permissions
+
+```
+$ chmod -R 777 public/
+```
+### 3. (Bonus) Import an example database
+From the folder 
+```
+dump/
+```
+<br>
+
+## Credits
 
 ### Authors
 
 Xavier CHOPIN and Alexis WURTH
+
+### Licence
+The MongoMap application is open-sourced software licensed under the MIT license.
