@@ -8,15 +8,14 @@ body {
 }
 
 #map {
-    height : 91.3%;
     width : 100%;
-    top : 0;
-    left : 0;
     position : absolute;
+    left : 0;
+    top : 53px;
+    bottom: 48px;
     z-index : 2;
     border: 2px #009890 solid;
     border-radius : 1px;
-    margin-bottom: 1.5em;
     padding : 1em;
 }
 
@@ -61,19 +60,24 @@ body {
 }
 
 footer {
-    position: fixed;
-    bottom: 0px;
-    right: 0px;
-    width: 100% !important;
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 !important;
+    border-radius: 0 !important;
     z-index: 50;
-
 }
 
-.footer {
+footer p {
+    text-align: center;
+}
+
+/*.footer {
     height: 10%;
     text-align: center;
     margin: 20px;
-}
+}*/
 
 .footer:before {
     content: '';
