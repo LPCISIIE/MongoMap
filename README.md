@@ -34,7 +34,7 @@ $ git clone https://github.com/TPCISIIE/MongoMap.git
 ### 2. Set up the permissions
 
 ```
-$ chmod -R 777 public/
+$ chmod -R 777 cache/
 ```
 ### 3. (Bonus) Import an example database
 From the folder 
