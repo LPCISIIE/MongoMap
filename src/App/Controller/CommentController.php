@@ -20,7 +20,7 @@ class CommentController extends Controller
     public function API_get(Request $request, Response $response, $id)
     {
         $response = $this->setCORS($response);
-        return json_encode($this->mongo->where('comment', ['location_id' => $id])->toArray());
+        return json_encode($this->mongo->where('comment', ['location_id' => $this->mongo->getObjectId($id)])->toArray());
     }
 
     public function add(Request $request, Response $response)
