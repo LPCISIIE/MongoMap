@@ -17,7 +17,7 @@
 - Slim Framework
 - Semantic UI
 
-### API used
+### APIs used
 - Google Maps
 - PixaBay
 
