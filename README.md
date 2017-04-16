@@ -3,10 +3,10 @@
 <p align="center">
 <img style="margin-bottom:3em; margin-right:25px" width="90px"src="http://mordem.net/wp-content/uploads/2014/01/mongodb-logo.png"> <img style="margin-bottom:3em;" width="90px"src="https://olivier-chauvel.fr/wp-content/uploads/2016/03/logo-google-maps.jpg">
 <br> <br>
-[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg?style=flat-square)]()  
+<img src="https://img.shields.io/packagist/l/doctrine/orm.svg?style=flat-square" alt="MIT" >
    </p>  <br>
    
-##MongoMap is a web application for creating events on a Google Maps
+## MongoMap is a web application for creating events on a Google Maps
 <br>
 
 ## Architecture 
@@ -47,7 +47,8 @@ dump/
 
 ### Authors
 
-Xavier CHOPIN and Alexis WURTH
+- Xavier CHOPIN
+- Alexis WURTH
 
 ### Licence
 The MongoMap application is open-sourced software licensed under the MIT license.
